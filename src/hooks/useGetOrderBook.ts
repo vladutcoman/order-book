@@ -1,52 +1,49 @@
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
+import useGetSnapshot from "../api/orders/hooks/useGetSnapshot";
+import useStreamOrders from "../api/orders/hooks/useStreamOrders";
 
-const useGetOrderBook = () => {
-  const wsRef = useRef<WebSocket | null>(null);
-  const lastUpdateTime = useRef(0);
-  const THROTTLE_MS = 1000; // Throttle updates to 200ms
+const useGetOrderBook = (symbol: string = "btcusdt") => {
+  const {
+    data: snapshot,
+    isLoading: snapshotLoading,
+    error: snapshotError,
+    refetch: refetchSnapshot,
+  } = useGetSnapshot(symbol);
+
+  const {
+    connect,
+    disconnect,
+    isConnected,
+    error: streamError,
+  } = useStreamOrders();
 
   useEffect(() => {
-    const wsUrl = "wss://stream.binance.com:9443/ws/btcusdt@depth20@100ms";
+    // First get the snapshot, then connect to WebSocket
+    if (snapshot && !isConnected) {
+      console.log("Snapshot loaded, connecting to WebSocket...");
+      connect(symbol);
+    }
+  }, [snapshot, isConnected, connect, symbol]);
 
-    console.log("Connecting to Binance WebSocket:", wsUrl);
-
-    const ws = new WebSocket(wsUrl);
-    wsRef.current = ws;
-
-    ws.onopen = () => {
-      console.log("Connected to Binance WebSocket for BTC order book");
-    };
-
-    ws.onmessage = (event) => {
-      const now = Date.now();
-
-      // Throttle updates to prevent UI spam
-      if (now - lastUpdateTime.current < THROTTLE_MS) {
-        return; // Skip this update
-      }
-
-      lastUpdateTime.current = now;
-      const data = JSON.parse(event.data);
-      console.log("Received order book data:", data);
-    };
-
-    ws.onclose = (event) => {
-      console.log("WebSocket closed:", event.code, event.reason);
-    };
-
-    ws.onerror = (error) => {
-      console.error("WebSocket error:", error);
-    };
-
+  useEffect(() => {
     // Cleanup on unmount
     return () => {
-      if (wsRef.current) {
-        wsRef.current.close();
-      }
+      disconnect();
     };
-  }, []);
+  }, [disconnect]);
 
-  return {};
+  console.log("snapshot", snapshot);
+
+  return {
+    snapshot,
+    snapshotLoading,
+    snapshotError,
+    isConnected,
+    streamError,
+    refetchSnapshot,
+    connect,
+    disconnect,
+  };
 };
 
 export default useGetOrderBook;
