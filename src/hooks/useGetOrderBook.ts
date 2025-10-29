@@ -1,31 +1,31 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef } from "react";
 
 const useGetOrderBook = () => {
   const wsRef = useRef<WebSocket | null>(null);
 
   useEffect(() => {
-    const wsUrl = 'wss://stream.binance.com:9443/ws/btcusdt@depth20@100ms';
+    const wsUrl = "wss://stream.binance.com:9443/ws/btcusdt@depth20@100ms";
 
-    console.log('Connecting to Binance WebSocket:', wsUrl);
+    console.log("Connecting to Binance WebSocket:", wsUrl);
 
     const ws = new WebSocket(wsUrl);
     wsRef.current = ws;
 
     ws.onopen = () => {
-      console.log('Connected to Binance WebSocket for BTC order book');
+      console.log("Connected to Binance WebSocket for BTC order book");
     };
 
     ws.onmessage = (event) => {
       const data = JSON.parse(event.data);
-      console.log('Received order book data:', data);
+      console.log("Received order book data:", data);
     };
 
     ws.onclose = (event) => {
-      console.log('WebSocket closed:', event.code, event.reason);
+      console.log("WebSocket closed:", event.code, event.reason);
     };
 
     ws.onerror = (error) => {
-      console.error('WebSocket error:', error);
+      console.error("WebSocket error:", error);
     };
 
     // Cleanup on unmount

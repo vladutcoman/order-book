@@ -1,0 +1,20 @@
+# Dependencies and build output
+node_modules
+out
+build
+dist
+coverage
+
+# IDE
+.idea
+.vscode
+
+# Binary assets
+**/*.ico
+*.ico
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*

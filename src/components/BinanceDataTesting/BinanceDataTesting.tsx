@@ -7,7 +7,7 @@ const BinanceDataTesting = () => {
     <div>
       <h1>Binance Data Testing</h1>
     </div>
-  )
-}
+  );
+};
 
 export default BinanceDataTesting;

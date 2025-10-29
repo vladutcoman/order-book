@@ -1,0 +1,36 @@
+/** @type {import("prettier").Config} */
+const config = {
+  singleQuote: true,
+  printWidth: 100,
+  tabWidth: 2,
+  useTabs: false,
+  bracketSpacing: true,
+  trailingComma: "all",
+  semi: true,
+  endOfLine: "lf",
+
+  plugins: [
+    "@ianvs/prettier-plugin-sort-imports",
+    "prettier-plugin-tailwindcss",
+  ],
+  importOrder: [
+    "<TYPES>",
+    "<BUILTIN_MODULES>",
+    "^(react/(.*)$)|^(react$)",
+    "^(next/(.*)$)|^(next$)",
+    "@tanstack/(.*)",
+    "<THIRD_PARTY_MODULES>",
+    "",
+    "<TYPES>^@/",
+    "<TYPES>^lucide-react",
+    "lucide-react",
+    "@/components/(.*)",
+    "@/components/ui/(.*)",
+    "@/hooks/(.*)",
+    "@/lib/(.*)",
+    "",
+    "<TYPES>^[.|..]",
+    "^[../]",
+    "^[./]",
+  ],
+};
