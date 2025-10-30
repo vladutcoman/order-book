@@ -6,11 +6,11 @@ import useGetOrderBook from "@/hooks/useGetOrderBook";
 const OrderBook = () => {
   useGetOrderBook("btcusdt");
   return (
-    <>
+    <div className="flex flex-col">
       <OrderBookHeader />
       <OrderBookContent />
       <OrderBookFooter />
-    </>
+    </div>
   );
 };
 

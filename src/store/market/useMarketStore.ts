@@ -1,4 +1,4 @@
-import type { Market } from "@/types/market/marketTypes";
+import type { Market } from "@/types/marketTypes";
 import { create } from "zustand";
 
 interface MarketStore {
