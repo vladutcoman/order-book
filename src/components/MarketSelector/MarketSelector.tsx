@@ -5,7 +5,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import useMarketStore from "@/store/market/useMarketStore";
+import useMarketStore from "@/stores/market/useMarketStore";
 
 const MARKETS = [
   { label: "BTC/USDT", value: "btcusdt" },

@@ -1,6 +1,6 @@
 import "./App.css";
 import MarketSelector from "@/components/MarketSelector/MarketSelector";
-import OrderBook from "@/components/OrderBook/OrderBook";
+import OrderBook from "@/features/OrderBook/OrderBook";
 
 function App() {
   return (
