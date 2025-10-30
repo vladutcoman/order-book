@@ -1,6 +1,6 @@
 import { useEffect } from "react";
-import useGetSnapshot from "../api/orders/hooks/useGetSnapshot";
-import useStreamOrders from "../api/orders/hooks/useStreamOrders";
+import useGetSnapshot from "../api/orderBook/hooks/useGetSnapshot";
+import useStreamOrders from "../api/orderBook/hooks/useStreamOrders";
 
 const useGetOrderBook = (symbol: string = "btcusdt") => {
   const {

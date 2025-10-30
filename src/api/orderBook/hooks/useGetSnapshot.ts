@@ -3,7 +3,7 @@ import type { SnapshotData, SnapshotError } from "../types";
 
 const fetchSnapshot = async (symbol: string): Promise<SnapshotData> => {
   const response = await fetch(
-    `https://api.binance.com/api/v3/depth?symbol=${symbol.toUpperCase()}&limit=5000`,
+    `https://api.binance.com/api/v3/depth?symbol=${symbol.toUpperCase()}&limit=1000`,
   );
 
   if (!response.ok) {
