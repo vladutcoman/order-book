@@ -2,18 +2,17 @@ import { useEffect, useRef, useCallback, useState } from "react";
 import type { DepthUpdate } from "../types";
 
 const useStreamOrders = () => {
+  const [error, setError] = useState<string | null>(null);
+  const [isConnected, setIsConnected] = useState(false);
   const wsRef = useRef<WebSocket | null>(null);
   const lastUpdateTime = useRef(0);
-  const [isConnected, setIsConnected] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const THROTTLE_MS = 1000;
 
   const connect = useCallback((symbol: string = "btcusdt") => {
     if (wsRef.current?.readyState === WebSocket.OPEN) {
       return;
     }
 
-    const wsUrl = `wss://stream.binance.com:9443/ws/${symbol}@depth@100ms`;
+    const wsUrl = `wss://stream.binance.com:9443/ws/${symbol}@depth@1000ms`;
     console.log("Connecting to WebSocket:", wsUrl);
 
     const ws = new WebSocket(wsUrl);
@@ -27,10 +26,6 @@ const useStreamOrders = () => {
 
     ws.onmessage = (event) => {
       const now = Date.now();
-
-      if (now - lastUpdateTime.current < THROTTLE_MS) {
-        return;
-      }
 
       lastUpdateTime.current = now;
       const data: DepthUpdate = JSON.parse(event.data);
@@ -72,4 +67,3 @@ const useStreamOrders = () => {
 };
 
 export default useStreamOrders;
-export type { DepthUpdate };

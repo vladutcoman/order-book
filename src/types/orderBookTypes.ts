@@ -1,0 +1,1 @@
+export type OrderBookTab = "bids" | "asks" | "both";
