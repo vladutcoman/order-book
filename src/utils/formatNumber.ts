@@ -1,6 +1,8 @@
 export const formatNumber = (
   number: number,
-  options: Intl.NumberFormatOptions = {},
 ) => {
-  return new Intl.NumberFormat("en-US", options).format(number);
+  return new Intl.NumberFormat("en-US", {
+    minimumFractionDigits: 5,
+    maximumFractionDigits: 5,
+  }).format(number);
 };

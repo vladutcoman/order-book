@@ -4,10 +4,8 @@ import useMarketStore from "@/stores/market/useMarketStore";
 import useOrderBookStore from "@/stores/orderBook/useOrderBookStore";
 import type { ProcessedOrder } from "@/types/orderBookTypes";
 import { groupByDecimal } from "@/utils/groupByDecimal";
-import { formatPrice } from "@/utils/formatPrice";
-import { formatQuantity } from "@/utils/formatQuantity";
-import { formatTotal } from "@/utils/formatTotal";
 import { roundNumber } from "@/utils/roundNumber";
+import { formatNumber } from "@/utils/formatNumber";
 
 const OrderBookContent = () => {
   const market = useMarketStore((s) => s.market);
@@ -67,11 +65,11 @@ const OrderBookContent = () => {
             className="grid grid-cols-3 gap-2 text-sm"
           >
             <div className="text-destructive">
-              {formatPrice(ask.price, decimal)}
+              {formatNumber(ask.price)}
             </div>
-            <div>{formatQuantity(ask.quantity)}</div>
+            <div>{formatNumber(ask.quantity)}</div>
             <div>
-              {rounding ? roundNumber(ask.total) : formatTotal(ask.total)}
+              {rounding ? roundNumber(ask.total) : formatNumber(ask.total)}
             </div>
           </div>
         ))}
@@ -93,11 +91,11 @@ const OrderBookContent = () => {
             className="grid grid-cols-3 gap-2 text-sm"
           >
             <div className="text-green-500">
-              {formatPrice(bid.price, decimal)}
+              {formatNumber(bid.price)}
             </div>
-            <div>{formatQuantity(bid.quantity)}</div>
+            <div>{formatNumber(bid.quantity)}</div>
             <div>
-              {rounding ? roundNumber(bid.total) : formatTotal(bid.total)}
+              {rounding ? roundNumber(bid.total) : formatNumber(bid.total)}
             </div>
           </div>
         ))}
