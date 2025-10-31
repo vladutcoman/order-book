@@ -2,6 +2,7 @@ import { useMemo } from "react";
 import useOrderBookStore from "@/stores/orderBook/useOrderBookStore";
 import useGetOrderBook from "@/hooks/useGetOrderBook";
 import useMarketStore from "@/stores/market/useMarketStore";
+import { groupByDecimal } from "@/utils/groupByDecimal";
 
 const OrderBookFooter = () => {
   const market = useMarketStore((s) => s.market);
@@ -17,32 +18,9 @@ const OrderBookFooter = () => {
       return null;
     }
 
-    // Use the same grouping logic as OrderBookContent
-    const groupByDecimal = (
-      orders: [string, string][],
-      step: number,
-    ): Map<number, number> => {
-      const grouped = new Map<number, number>();
-
-      for (const [priceStr, quantityStr] of orders) {
-        const price = parseFloat(priceStr);
-        const quantity = parseFloat(quantityStr);
-
-        const bucket = Math.floor(price / step);
-        const groupedPrice = bucket * step;
-
-        const existing = grouped.get(groupedPrice) || 0;
-        grouped.set(groupedPrice, existing + quantity);
-      }
-
-      return grouped;
-    };
-
-    // Group by decimal step
     const groupedBids = groupByDecimal(bids, decimal);
     const groupedAsks = groupByDecimal(asks, decimal);
 
-    // Convert to arrays and get top 17
     const bidsArray = Array.from(groupedBids.entries())
       .sort((a, b) => b[0] - a[0])
       .slice(0, 17);

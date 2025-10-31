@@ -1,15 +1,14 @@
 import { useEffect, useRef, useCallback, useState } from "react";
 import type { DepthUpdate } from "../types";
+import useOrderBookStore from "@/stores/orderBook/useOrderBookStore";
 
-interface UseStreamOrdersOptions {
-  onUpdate?: (update: DepthUpdate) => void;
-}
 
-const useStreamOrders = (options: UseStreamOrdersOptions = {}) => {
-  const { onUpdate } = options;
+const useStreamOrders = () => {
   const [error, setError] = useState<string | null>(null);
   const [isConnected, setIsConnected] = useState(false);
   const wsRef = useRef<WebSocket | null>(null);
+
+  const applyUpdate = useOrderBookStore((s) => s.applyUpdate);
 
   const connect = useCallback(
     (symbol: string = "btcusdt") => {
@@ -33,9 +32,7 @@ const useStreamOrders = (options: UseStreamOrdersOptions = {}) => {
         const data: DepthUpdate = JSON.parse(event.data);
         console.log("Received depth update:", data);
 
-        if (onUpdate) {
-          onUpdate(data);
-        }
+        applyUpdate(data);
       };
 
       ws.onclose = (event) => {
@@ -49,7 +46,7 @@ const useStreamOrders = (options: UseStreamOrdersOptions = {}) => {
         setIsConnected(false);
       };
     },
-    [onUpdate],
+    [applyUpdate],
   );
 
   const disconnect = useCallback(() => {

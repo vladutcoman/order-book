@@ -24,9 +24,9 @@ const OrderBookHeader = () => {
   const setShowBuySellRatio = useOrderBookStore((s) => s.setShowBuySellRatio);
 
   return (
-    <div className="flex items-center justify-between">
+    <div className="flex flex-col items-center justify-between mb-5">
       <h2 className="text-lg font-semibold">Order Book</h2>
-      <div className="flex items-center gap-4">
+      <div className="flex flex-col items-center gap-4">
         <label className="flex items-center gap-2 text-sm cursor-pointer">
           <input
             type="checkbox"

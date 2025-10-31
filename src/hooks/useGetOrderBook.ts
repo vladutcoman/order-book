@@ -12,7 +12,6 @@ const useGetOrderBook = (symbol: string = "btcusdt") => {
   } = useGetSnapshot(symbol);
 
   const setBidsAndAsks = useOrderBookStore((s) => s.setBidsAndAsks);
-  const applyUpdate = useOrderBookStore((s) => s.applyUpdate);
   const reset = useOrderBookStore((s) => s.reset);
 
   const {
@@ -20,18 +19,14 @@ const useGetOrderBook = (symbol: string = "btcusdt") => {
     disconnect,
     isConnected,
     error: streamError,
-  } = useStreamOrders({
-    onUpdate: applyUpdate,
-  });
+  } = useStreamOrders();
 
-  // Update store when snapshot arrives
   useEffect(() => {
     if (snapshot) {
       setBidsAndAsks(snapshot.bids, snapshot.asks, snapshot.lastUpdateId);
     }
   }, [snapshot, setBidsAndAsks]);
 
-  // Connect WebSocket after snapshot is ready
   useEffect(() => {
     if (snapshot && !isConnected) {
       console.log("Snapshot loaded, connecting to WebSocket...");
@@ -39,7 +34,6 @@ const useGetOrderBook = (symbol: string = "btcusdt") => {
     }
   }, [snapshot, isConnected, connect, symbol]);
 
-  // Reset and disconnect on symbol change
   useEffect(() => {
     return () => {
       reset();
