@@ -42,7 +42,7 @@ interface OrderBookStore {
 
 const useOrderBookStore = create<OrderBookStore>((set, get) => ({
   tab: "both",
-  decimal: 0.001,
+  decimal: 0.01,
   depthVisualization: "amount",
   displayAvgSum: false,
   showBuySellRatio: false,
