@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import useGetSnapshot from "../api/orderBook/hooks/useGetSnapshot";
 import useStreamOrders from "../api/orderBook/hooks/useStreamOrders";
+import useOrderBookStore from "@/stores/orderBook/useOrderBookStore";
 
 const useGetOrderBook = (symbol: string = "btcusdt") => {
   const {
@@ -10,6 +11,9 @@ const useGetOrderBook = (symbol: string = "btcusdt") => {
     refetch: refetchSnapshot,
   } = useGetSnapshot(symbol);
 
+  const setBidsAndAsks = useOrderBookStore((s) => s.setBidsAndAsks);
+  const reset = useOrderBookStore((s) => s.reset);
+
   const {
     connect,
     disconnect,
@@ -18,7 +22,12 @@ const useGetOrderBook = (symbol: string = "btcusdt") => {
   } = useStreamOrders();
 
   useEffect(() => {
-    // First get the snapshot, then connect to WebSocket
+    if (snapshot) {
+      setBidsAndAsks(snapshot.bids, snapshot.asks, snapshot.lastUpdateId);
+    }
+  }, [snapshot, setBidsAndAsks]);
+
+  useEffect(() => {
     if (snapshot && !isConnected) {
       console.log("Snapshot loaded, connecting to WebSocket...");
       connect(symbol);
@@ -26,13 +35,11 @@ const useGetOrderBook = (symbol: string = "btcusdt") => {
   }, [snapshot, isConnected, connect, symbol]);
 
   useEffect(() => {
-    // Cleanup on unmount
     return () => {
+      reset();
       disconnect();
     };
-  }, [disconnect]);
-
-  console.log("snapshot", snapshot);
+  }, [symbol, reset, disconnect]);
 
   return {
     snapshot,

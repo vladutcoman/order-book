@@ -2,14 +2,13 @@ import OrderBookContent from "@/features/OrderBook/OrderBookContent/OrderBookCon
 import OrderBookFooter from "@/features/OrderBook/OrderBookFooter/OrderBookFooter";
 import OrderBookHeader from "@/features/OrderBook/OrderBookHeader/OrderBookHeader";
 import useGetOrderBook from "@/hooks/useGetOrderBook";
-import { useTranslation } from "react-i18next";
+import useMarketStore from "@/stores/market/useMarketStore";
 
 const OrderBook = () => {
-  const { t } = useTranslation();
-  useGetOrderBook("btcusdt");
+  const market = useMarketStore((s) => s.market);
+  useGetOrderBook(market);
   return (
     <div className="flex flex-col">
-      <h1>{t("hello")}</h1>
       <OrderBookHeader />
       <OrderBookContent />
       <OrderBookFooter />
