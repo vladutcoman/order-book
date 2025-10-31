@@ -20,30 +20,43 @@ const DECIMAL_OPTIONS: { label: string; value: OrderBookDecimal }[] = [
 const OrderBookHeader = () => {
   const decimal = useOrderBookStore((s) => s.decimal);
   const setDecimal = useOrderBookStore((s) => s.setDecimal);
+  const showBuySellRatio = useOrderBookStore((s) => s.showBuySellRatio);
+  const setShowBuySellRatio = useOrderBookStore((s) => s.setShowBuySellRatio);
 
   return (
     <div className="flex items-center justify-between">
       <h2 className="text-lg font-semibold">Order Book</h2>
-      <Select
-        value={decimal.toString()}
-        onValueChange={(value) =>
-          setDecimal(parseFloat(value) as OrderBookDecimal)
-        }
-      >
-        <SelectTrigger
-          className="w-[120px]"
-          aria-label="Select decimal precision"
+      <div className="flex items-center gap-4">
+        <label className="flex items-center gap-2 text-sm cursor-pointer">
+          <input
+            type="checkbox"
+            checked={showBuySellRatio}
+            onChange={(e) => setShowBuySellRatio(e.target.checked)}
+            className="cursor-pointer"
+          />
+          <span>Show Buy/Sell Ratio</span>
+        </label>
+        <Select
+          value={decimal.toString()}
+          onValueChange={(value) =>
+            setDecimal(parseFloat(value) as OrderBookDecimal)
+          }
         >
-          <SelectValue placeholder="Select decimal" />
-        </SelectTrigger>
-        <SelectContent>
-          {DECIMAL_OPTIONS.map((option) => (
-            <SelectItem key={option.value} value={option.value.toString()}>
-              {option.label}
-            </SelectItem>
-          ))}
-        </SelectContent>
-      </Select>
+          <SelectTrigger
+            className="w-[120px]"
+            aria-label="Select decimal precision"
+          >
+            <SelectValue placeholder="Select decimal" />
+          </SelectTrigger>
+          <SelectContent>
+            {DECIMAL_OPTIONS.map((option) => (
+              <SelectItem key={option.value} value={option.value.toString()}>
+                {option.label}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
     </div>
   );
 };
