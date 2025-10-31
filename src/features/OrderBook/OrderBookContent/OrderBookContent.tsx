@@ -7,10 +7,12 @@ import { groupByDecimal } from "@/utils/groupByDecimal";
 import { formatPrice } from "@/utils/formatPrice";
 import { formatQuantity } from "@/utils/formatQuantity";
 import { formatTotal } from "@/utils/formatTotal";
+import { roundNumber } from "@/utils/roundNumber";
 
 const OrderBookContent = () => {
   const market = useMarketStore((s) => s.market);
   const decimal = useOrderBookStore((s) => s.decimal);
+  const rounding = useOrderBookStore((s) => s.rounding);
   const bids = useOrderBookStore((s) => s.bids);
   const asks = useOrderBookStore((s) => s.asks);
 
@@ -68,7 +70,9 @@ const OrderBookContent = () => {
               {formatPrice(ask.price, decimal)}
             </div>
             <div>{formatQuantity(ask.quantity)}</div>
-            <div>{formatTotal(ask.total)}</div>
+            <div>
+              {rounding ? roundNumber(ask.total) : formatTotal(ask.total)}
+            </div>
           </div>
         ))}
       </div>
@@ -92,7 +96,9 @@ const OrderBookContent = () => {
               {formatPrice(bid.price, decimal)}
             </div>
             <div>{formatQuantity(bid.quantity)}</div>
-            <div>{formatTotal(bid.total)}</div>
+            <div>
+              {rounding ? roundNumber(bid.total) : formatTotal(bid.total)}
+            </div>
           </div>
         ))}
       </div>

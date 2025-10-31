@@ -20,6 +20,8 @@ const DECIMAL_OPTIONS: { label: string; value: OrderBookDecimal }[] = [
 const OrderBookHeader = () => {
   const decimal = useOrderBookStore((s) => s.decimal);
   const setDecimal = useOrderBookStore((s) => s.setDecimal);
+  const rounding = useOrderBookStore((s) => s.rounding);
+  const setRounding = useOrderBookStore((s) => s.setRounding);
   const showBuySellRatio = useOrderBookStore((s) => s.showBuySellRatio);
   const setShowBuySellRatio = useOrderBookStore((s) => s.setShowBuySellRatio);
 
@@ -35,6 +37,15 @@ const OrderBookHeader = () => {
             className="cursor-pointer"
           />
           <span>Show Buy/Sell Ratio</span>
+        </label>
+        <label className="flex items-center gap-2 text-sm cursor-pointer">
+          <input
+            type="checkbox"
+            checked={rounding}
+            onChange={(e) => setRounding(e.target.checked)}
+            className="cursor-pointer"
+          />
+          <span>Rounding</span>
         </label>
         <Select
           value={decimal.toString()}
