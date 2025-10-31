@@ -6,6 +6,7 @@ import type { ProcessedOrder } from "@/types/orderBookTypes";
 import { groupByDecimal } from "@/utils/groupByDecimal";
 import { formatPrice } from "@/utils/formatPrice";
 import { formatQuantity } from "@/utils/formatQuantity";
+import { formatTotal } from "@/utils/formatTotal";
 
 const OrderBookContent = () => {
   const market = useMarketStore((s) => s.market);
@@ -20,35 +21,29 @@ const OrderBookContent = () => {
       return { processedBids: [], processedAsks: [] };
     }
 
-    // Group by decimal step
     const groupedBids = groupByDecimal(bids, decimal);
     const groupedAsks = groupByDecimal(asks, decimal);
 
     // Convert to arrays and sort
     const bidsArray: ProcessedOrder[] = Array.from(groupedBids.entries())
-      .map(([price, quantity]) => ({ price, quantity, total: 0 }))
-      .sort((a, b) => b.price - a.price); // Descending for bids
+      .map(([price, quantity]) => ({
+        price,
+        quantity,
+        total: price * quantity,
+      }))
+      .sort((a, b) => b.price - a.price);
 
     const asksArray: ProcessedOrder[] = Array.from(groupedAsks.entries())
-      .map(([price, quantity]) => ({ price, quantity, total: 0 }))
-      .sort((a, b) => a.price - b.price); // Ascending for asks
-
-    // Calculate cumulative totals
-    let bidTotal = 0;
-    const bidsWithTotal = bidsArray.map((bid) => {
-      bidTotal += bid.quantity;
-      return { ...bid, total: bidTotal };
-    });
-
-    let askTotal = 0;
-    const asksWithTotal = asksArray.map((ask) => {
-      askTotal += ask.quantity;
-      return { ...ask, total: askTotal };
-    });
+      .map(([price, quantity]) => ({
+        price,
+        quantity,
+        total: price * quantity,
+      }))
+      .sort((a, b) => a.price - b.price);
 
     return {
-      processedBids: bidsWithTotal.slice(0, 17),
-      processedAsks: asksWithTotal.slice(0, 17).reverse(),
+      processedBids: bidsArray.slice(0, 17),
+      processedAsks: asksArray.slice(0, 17).reverse(),
     };
   }, [bids, asks, decimal]);
 
@@ -69,9 +64,11 @@ const OrderBookContent = () => {
             key={`ask-${ask.price}-${index}`}
             className="grid grid-cols-3 gap-2 text-sm"
           >
-            <div className="text-destructive">{formatPrice(ask.price, decimal)}</div>
+            <div className="text-destructive">
+              {formatPrice(ask.price, decimal)}
+            </div>
             <div>{formatQuantity(ask.quantity)}</div>
-            <div>{formatQuantity(ask.total)}</div>
+            <div>{formatTotal(ask.total)}</div>
           </div>
         ))}
       </div>
@@ -91,9 +88,11 @@ const OrderBookContent = () => {
             key={`bid-${bid.price}-${index}`}
             className="grid grid-cols-3 gap-2 text-sm"
           >
-            <div className="text-green-500">{formatPrice(bid.price, decimal)}</div>
+            <div className="text-green-500">
+              {formatPrice(bid.price, decimal)}
+            </div>
             <div>{formatQuantity(bid.quantity)}</div>
-            <div>{formatQuantity(bid.total)}</div>
+            <div>{formatTotal(bid.total)}</div>
           </div>
         ))}
       </div>

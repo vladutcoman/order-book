@@ -2,7 +2,6 @@ import { useEffect, useRef, useCallback, useState } from "react";
 import type { DepthUpdate } from "../types";
 import useOrderBookStore from "@/stores/orderBook/useOrderBookStore";
 
-
 const useStreamOrders = () => {
   const [error, setError] = useState<string | null>(null);
   const [isConnected, setIsConnected] = useState(false);
