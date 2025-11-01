@@ -18,7 +18,7 @@ const MarketSelector = () => {
   const setMarket = useMarketStore((s) => s.setMarket);
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col gap-2 items-center">
       <Select value={market} onValueChange={setMarket}>
         <SelectTrigger aria-label="Select market">
           <SelectValue placeholder="Select market" />

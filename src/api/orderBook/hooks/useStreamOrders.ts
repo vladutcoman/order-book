@@ -11,8 +11,19 @@ const useStreamOrders = () => {
 
   const connect = useCallback(
     (symbol: string = "btcusdt") => {
-      if (wsRef.current?.readyState === WebSocket.OPEN) {
+      // Check if already connected or connecting
+      if (
+        wsRef.current?.readyState === WebSocket.OPEN ||
+        wsRef.current?.readyState === WebSocket.CONNECTING
+      ) {
+        console.log("WebSocket already connected or connecting, skipping...");
         return;
+      }
+
+      // Close any existing connection before creating a new one
+      if (wsRef.current) {
+        wsRef.current.close();
+        wsRef.current = null;
       }
 
       const wsUrl = `wss://stream.binance.com:9443/ws/${symbol}@depth@1000ms`;
