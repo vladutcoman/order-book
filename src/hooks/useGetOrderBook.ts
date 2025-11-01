@@ -28,18 +28,25 @@ const useGetOrderBook = (symbol: string = "btcusdt") => {
   }, [snapshot, setBidsAndAsks]);
 
   useEffect(() => {
+    // Disconnect and reset when symbol changes
+    disconnect();
+    reset();
+  }, [symbol, disconnect, reset]);
+
+  useEffect(() => {
     if (snapshot && !isConnected) {
       console.log("Snapshot loaded, connecting to WebSocket...");
       connect(symbol);
     }
   }, [snapshot, isConnected, connect, symbol]);
 
+  // Cleanup on unmount
   useEffect(() => {
     return () => {
-      reset();
       disconnect();
+      reset();
     };
-  }, [symbol, reset, disconnect]);
+  }, [disconnect, reset]);
 
   return {
     snapshot,

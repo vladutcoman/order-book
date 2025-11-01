@@ -1,6 +1,4 @@
 import { useMemo } from "react";
-import useGetOrderBook from "@/hooks/useGetOrderBook";
-import useMarketStore from "@/stores/market/useMarketStore";
 import useOrderBookStore from "@/stores/orderBook/useOrderBookStore";
 import type { ProcessedOrder } from "@/types/orderBookTypes";
 import { groupByDecimal } from "@/utils/groupByDecimal";
@@ -8,13 +6,10 @@ import { roundNumber } from "@/utils/roundNumber";
 import { formatNumber } from "@/utils/formatNumber";
 
 const OrderBookContent = () => {
-  const market = useMarketStore((s) => s.market);
   const decimal = useOrderBookStore((s) => s.decimal);
   const rounding = useOrderBookStore((s) => s.rounding);
   const bids = useOrderBookStore((s) => s.bids);
   const asks = useOrderBookStore((s) => s.asks);
-
-  useGetOrderBook(market);
 
   const { processedBids, processedAsks } = useMemo(() => {
     if (bids.length === 0 && asks.length === 0) {

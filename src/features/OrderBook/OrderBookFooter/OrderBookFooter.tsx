@@ -1,17 +1,12 @@
 import { useMemo } from "react";
 import useOrderBookStore from "@/stores/orderBook/useOrderBookStore";
-import useGetOrderBook from "@/hooks/useGetOrderBook";
-import useMarketStore from "@/stores/market/useMarketStore";
 import { groupByDecimal } from "@/utils/groupByDecimal";
 
 const OrderBookFooter = () => {
-  const market = useMarketStore((s) => s.market);
   const bids = useOrderBookStore((s) => s.bids);
   const asks = useOrderBookStore((s) => s.asks);
   const decimal = useOrderBookStore((s) => s.decimal);
   const showBuySellRatio = useOrderBookStore((s) => s.showBuySellRatio);
-
-  useGetOrderBook(market);
 
   const ratio = useMemo(() => {
     if (!showBuySellRatio || bids.length === 0 || asks.length === 0) {
