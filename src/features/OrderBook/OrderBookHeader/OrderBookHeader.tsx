@@ -47,103 +47,102 @@ const OrderBookHeader = () => {
   const setAnimationsEnabled = useOrderBookStore((s) => s.setAnimationsEnabled);
 
   return (
-    <div className="flex items-center justify-between mb-4">
-      <h2 className="text-lg font-semibold">Order Book</h2>
-      <div className="flex items-center gap-2">
-        <Select
-          value={decimal.toString()}
-          onValueChange={(value) =>
-            setDecimal(parseFloat(value) as OrderBookDecimal)
-          }
-        >
-          <SelectTrigger
-            className="w-[80px] h-8"
-            aria-label="Select decimal precision"
-          >
-            <SelectValue placeholder="Select decimal" />
-          </SelectTrigger>
-          <SelectContent>
-            {DECIMAL_OPTIONS.map((option) => (
-              <SelectItem key={option.value} value={option.value.toString()}>
-                {option.label}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" size="icon" className="h-8 w-8">
-              <MoreHorizontal className="h-4 w-4" />
-              <span className="sr-only">Open order book settings</span>
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent
-            align="end"
-            className="w-56 bg-[#1e2329] border-[#2b3139] p-2"
-          >
-            <DropdownMenuLabel className="text-[#848e9c] font-semibold px-2 py-1.5">
-              Order Book Display
-            </DropdownMenuLabel>
-            <DropdownMenuCheckboxItem
-              checked={showBuySellRatio}
-              onCheckedChange={setShowBuySellRatio}
-              className="py-1.5 text-white"
+    <div className="flex flex-col gap-2">
+      <div className="flex items-center justify-between mb-4">
+        <h2 className="text-lg font-semibold">Order Book</h2>
+        <div className="flex items-center gap-2">
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" size="icon" className="h-8 w-8">
+                <MoreHorizontal className="h-4 w-4" />
+                <span className="sr-only">Open order book settings</span>
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent
+              align="end"
+              className="w-56 bg-[#1e2329] border-[#2b3139] p-2"
             >
-              Show Buy/Sell Ratio
-            </DropdownMenuCheckboxItem>
-            <DropdownMenuCheckboxItem
-              checked={rounding}
-              onCheckedChange={setRounding}
-              className="py-1.5 text-white"
-            >
-              Rounding
-            </DropdownMenuCheckboxItem>
-
-            <DropdownMenuSeparator className="mx-1 bg-[#2b3139] h-px" />
-
-            <DropdownMenuLabel className="text-[#848e9c] font-semibold px-2 py-1.5">
-              Book Depth Visualization
-            </DropdownMenuLabel>
-            <DropdownMenuRadioGroup
-              value={depthVisualization}
-              onValueChange={(value) => {
-                setDepthVisualization(value as OrderBookDepthVisualization);
-                console.log("Depth visualization:", value);
-              }}
-            >
-              <DropdownMenuRadioItem
-                value="amount"
+              <DropdownMenuLabel className="text-[#848e9c] text-[10px] font-semibold px-2 py-1.5">
+                Order Book Display
+              </DropdownMenuLabel>
+              <DropdownMenuCheckboxItem
+                checked={showBuySellRatio}
+                onCheckedChange={setShowBuySellRatio}
                 className="py-1.5 text-white"
               >
-                Amount
-              </DropdownMenuRadioItem>
-              <DropdownMenuRadioItem
-                value="cumulative"
+                Show Buy/Sell Ratio
+              </DropdownMenuCheckboxItem>
+              <DropdownMenuCheckboxItem
+                checked={rounding}
+                onCheckedChange={setRounding}
                 className="py-1.5 text-white"
               >
-                Cumulative
-              </DropdownMenuRadioItem>
-            </DropdownMenuRadioGroup>
+                Rounding
+              </DropdownMenuCheckboxItem>
 
-            <DropdownMenuSeparator className="mx-1 bg-[#2b3139] h-px" />
+              <DropdownMenuSeparator className="mx-1 bg-[#2b3139] h-px" />
 
-            <DropdownMenuLabel className="text-white px-2 py-1.5 font-normal">
-              Animations
-            </DropdownMenuLabel>
-            <DropdownMenuCheckboxItem
-              checked={animationsEnabled}
-              onCheckedChange={(checked) => {
-                setAnimationsEnabled(checked);
-                console.log("Animations:", checked);
-              }}
-              className="py-1.5 text-white"
-            >
-              Enable Animations
-            </DropdownMenuCheckboxItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+              <DropdownMenuLabel className="text-[#848e9c] text-[10px] font-semibold px-2 py-1.5">
+                Book Depth Visualization
+              </DropdownMenuLabel>
+              <DropdownMenuRadioGroup
+                value={depthVisualization}
+                onValueChange={(value) => {
+                  setDepthVisualization(value as OrderBookDepthVisualization);
+                  console.log("Depth visualization:", value);
+                }}
+              >
+                <DropdownMenuRadioItem
+                  value="amount"
+                  className="py-1.5 text-white"
+                >
+                  Amount
+                </DropdownMenuRadioItem>
+                <DropdownMenuRadioItem
+                  value="cumulative"
+                  className="py-1.5 text-white"
+                >
+                  Cumulative
+                </DropdownMenuRadioItem>
+              </DropdownMenuRadioGroup>
+
+              <DropdownMenuSeparator className="mx-1 bg-[#2b3139] h-px" />
+
+              <DropdownMenuCheckboxItem
+                checked={animationsEnabled}
+                onCheckedChange={(checked) => {
+                  setAnimationsEnabled(checked);
+                  console.log("Animations:", checked);
+                }}
+                className="py-1.5 text-white"
+              >
+                Enable Animations
+              </DropdownMenuCheckboxItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
+
       </div>
-
+      <Select
+        value={decimal.toString()}
+        onValueChange={(value) =>
+          setDecimal(parseFloat(value) as OrderBookDecimal)
+        }
+      >
+        <SelectTrigger
+          className="w-[80px] h-8"
+          aria-label="Select decimal precision"
+        >
+          <SelectValue placeholder="Select decimal" />
+        </SelectTrigger>
+        <SelectContent>
+          {DECIMAL_OPTIONS.map((option) => (
+            <SelectItem key={option.value} value={option.value.toString()}>
+              {option.label}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
     </div>
   );
 };
