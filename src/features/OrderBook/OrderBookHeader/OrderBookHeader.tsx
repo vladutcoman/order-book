@@ -16,7 +16,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Switch } from "@/components/ui/switch";
 import { Button } from "@/components/ui/button";
 import useOrderBookStore from "@/stores/orderBook/useOrderBookStore";
 import type {
@@ -128,19 +127,19 @@ const OrderBookHeader = () => {
 
             <DropdownMenuSeparator className="mx-1 bg-[#2b3139] h-px" />
 
-            <div className="flex items-center justify-between px-2 py-1.5">
-              <DropdownMenuLabel className="font-normal text-white px-0">
-                Animations
-              </DropdownMenuLabel>
-              <Switch
-                checked={animationsEnabled}
-                onCheckedChange={(checked) => {
-                  setAnimationsEnabled(checked);
-                  console.log("Animations:", checked);
-                }}
-                className="data-[state=checked]:bg-[#f0b90b] data-[state=unchecked]:bg-[#474d57]"
-              />
-            </div>
+            <DropdownMenuLabel className="text-white px-2 py-1.5 font-normal">
+              Animations
+            </DropdownMenuLabel>
+            <DropdownMenuCheckboxItem
+              checked={animationsEnabled}
+              onCheckedChange={(checked) => {
+                setAnimationsEnabled(checked);
+                console.log("Animations:", checked);
+              }}
+              className="py-1.5 text-white"
+            >
+              Enable Animations
+            </DropdownMenuCheckboxItem>
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
