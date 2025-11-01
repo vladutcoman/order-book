@@ -29,22 +29,8 @@ const TabIcon = ({ tabValue }: { tabValue: OrderBookTab }) => {
           {/* 2x2 grid with red/green */}
           <rect x="2" y="2" width="6" height="6" fill="#ef4444" />
           <rect x="2" y="8" width="6" height="6" fill="#22c55e" />
-          <rect
-            x="8"
-            y="2"
-            width="6"
-            height="6"
-            fill="#9ca3af"
-            opacity="0.5"
-          />
-          <rect
-            x="8"
-            y="8"
-            width="6"
-            height="6"
-            fill="#9ca3af"
-            opacity="0.5"
-          />
+          <rect x="8" y="2" width="6" height="6" fill="#9ca3af" opacity="0.5" />
+          <rect x="8" y="8" width="6" height="6" fill="#9ca3af" opacity="0.5" />
         </svg>
       )}
       {tabValue === "bids" && (
@@ -57,22 +43,8 @@ const TabIcon = ({ tabValue }: { tabValue: OrderBookTab }) => {
         >
           {/* Green rectangle on left */}
           <rect x="2" y="2" width="6" height="12" fill="#22c55e" />
-          <rect
-            x="8"
-            y="2"
-            width="6"
-            height="6"
-            fill="#9ca3af"
-            opacity="0.5"
-          />
-          <rect
-            x="8"
-            y="8"
-            width="6"
-            height="6"
-            fill="#9ca3af"
-            opacity="0.5"
-          />
+          <rect x="8" y="2" width="6" height="6" fill="#9ca3af" opacity="0.5" />
+          <rect x="8" y="8" width="6" height="6" fill="#9ca3af" opacity="0.5" />
         </svg>
       )}
       {tabValue === "asks" && (
@@ -85,22 +57,8 @@ const TabIcon = ({ tabValue }: { tabValue: OrderBookTab }) => {
         >
           {/* Red rectangle on left */}
           <rect x="2" y="2" width="6" height="12" fill="#ef4444" />
-          <rect
-            x="8"
-            y="2"
-            width="6"
-            height="6"
-            fill="#9ca3af"
-            opacity="0.5"
-          />
-          <rect
-            x="8"
-            y="8"
-            width="6"
-            height="6"
-            fill="#9ca3af"
-            opacity="0.5"
-          />
+          <rect x="8" y="2" width="6" height="6" fill="#9ca3af" opacity="0.5" />
+          <rect x="8" y="8" width="6" height="6" fill="#9ca3af" opacity="0.5" />
         </svg>
       )}
     </button>
