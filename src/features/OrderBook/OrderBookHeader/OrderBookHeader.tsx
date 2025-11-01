@@ -22,6 +22,7 @@ import type {
   OrderBookDecimal,
   OrderBookDepthVisualization,
 } from "@/types/orderBookTypes";
+import { Separator } from "@/components/ui/separator";
 
 const DECIMAL_OPTIONS: { label: string; value: OrderBookDecimal }[] = [
   { label: "0.01", value: 0.01 },
@@ -47,8 +48,8 @@ const OrderBookHeader = () => {
   const setAnimationsEnabled = useOrderBookStore((s) => s.setAnimationsEnabled);
 
   return (
-    <div className="flex flex-col gap-2">
-      <div className="flex items-center justify-between mb-4">
+    <div className="flex flex-col gap-2 mb-4">
+      <div className="flex items-center justify-between">
         <h2 className="text-lg font-semibold">Order Book</h2>
         <div className="flex items-center gap-2">
           <DropdownMenu>
@@ -123,6 +124,7 @@ const OrderBookHeader = () => {
         </div>
 
       </div>
+      <Separator className="my-1" />
       <Select
         value={decimal.toString()}
         onValueChange={(value) =>
