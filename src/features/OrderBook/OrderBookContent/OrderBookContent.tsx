@@ -52,7 +52,7 @@ const OrderBookContent = () => {
   }
 
   return (
-    <div className="flex flex-col gap-2">
+    <div className="flex flex-col gap-2 px-4 pb-2">
       <div className="flex flex-col">
         <div className="grid grid-cols-3 gap-2 text-sm font-medium text-muted-foreground pb-1">
           <div>Price (USDT)</div>

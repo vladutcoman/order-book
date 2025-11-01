@@ -49,9 +49,9 @@ const OrderBookHeader = () => {
   const setAnimationsEnabled = useOrderBookStore((s) => s.setAnimationsEnabled);
 
   return (
-    <div className="flex flex-col gap-2 mb-4">
+    <div className="flex flex-col mb-1 px-4 pt-1">
       <div className="flex items-center justify-between">
-        <h2 className="text-lg font-semibold">Order Book</h2>
+        <h2 className="text-lg font-semibold text-[14px]">Order Book</h2>
         <div className="flex items-center gap-2">
           <DropdownMenu>
             <DropdownMenuTrigger asChild className={cn(
@@ -144,7 +144,7 @@ const OrderBookHeader = () => {
       >
         <SelectTrigger
           className={cn(
-            "bg-transparent! border-none! shadow-none! outline-none! p-0",
+            "bg-transparent! border-none! shadow-none! outline-none! p-0!",
             "hover:border-none! hover:outline-none!",
             "focus:border-none! focus:outline-none!",
             "focus-visible:border-none! focus-visible:outline-none!",
