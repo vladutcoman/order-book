@@ -8,6 +8,7 @@ import {
 import { cn } from "@/lib/utils";
 import useOrderBookStore from "@/stores/orderBook/useOrderBookStore";
 import type { OrderBookDecimal } from "@/types/orderBookTypes";
+import TabIcon from "./TabIcon/TabIcon";
 
 const DECIMAL_OPTIONS: { label: string; value: OrderBookDecimal }[] = [
   { label: "0.01", value: 0.01 },
@@ -23,7 +24,12 @@ const HeaderBottomSection = () => {
   const setDecimal = useOrderBookStore((s) => s.setDecimal);
 
   return (
-    <div className="flex items-center gap-2 px-4 ">
+    <div className="flex items-center gap-2 px-4 justify-between w-full">
+      <div className="flex items-center gap-1 ">
+        <TabIcon tabValue="both" />
+        <TabIcon tabValue="bids" />
+        <TabIcon tabValue="asks" />
+      </div>
       <Select
         value={decimal.toString()}
         onValueChange={(value) =>
