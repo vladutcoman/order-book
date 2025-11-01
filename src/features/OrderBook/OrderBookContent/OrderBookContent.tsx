@@ -4,6 +4,7 @@ import type { ProcessedOrder } from "@/types/orderBookTypes";
 import { groupByDecimal } from "@/utils/groupByDecimal";
 import { roundNumber } from "@/utils/roundNumber";
 import { formatNumber } from "@/utils/formatNumber";
+import TickerCurrentPrice from "./TickerCurrentPrice/TickerCurrentPrice";
 
 const OrderBookContent = () => {
   const decimal = useOrderBookStore((s) => s.decimal);
@@ -59,9 +60,7 @@ const OrderBookContent = () => {
             key={`ask-${ask.price}-${index}`}
             className="grid grid-cols-3 gap-2 text-sm"
           >
-            <div className="text-destructive">
-              {formatNumber(ask.price)}
-            </div>
+            <div className="text-destructive">{formatNumber(ask.price)}</div>
             <div>{formatNumber(ask.quantity)}</div>
             <div>
               {rounding ? roundNumber(ask.total) : formatNumber(ask.total)}
@@ -70,9 +69,7 @@ const OrderBookContent = () => {
         ))}
       </div>
 
-      <div className="border-t border-b py-2 text-center text-lg font-semibold">
-        {/* Current price would go here */}
-      </div>
+      <TickerCurrentPrice />
 
       <div className="flex flex-col">
         <div className="grid grid-cols-3 gap-2 text-sm font-medium text-muted-foreground pb-1">
@@ -85,9 +82,7 @@ const OrderBookContent = () => {
             key={`bid-${bid.price}-${index}`}
             className="grid grid-cols-3 gap-2 text-sm"
           >
-            <div className="text-green-500">
-              {formatNumber(bid.price)}
-            </div>
+            <div className="text-green-500">{formatNumber(bid.price)}</div>
             <div>{formatNumber(bid.quantity)}</div>
             <div>
               {rounding ? roundNumber(bid.total) : formatNumber(bid.total)}

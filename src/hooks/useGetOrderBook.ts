@@ -27,8 +27,8 @@ const useGetOrderBook = (symbol: string = "btcusdt") => {
     }
   }, [snapshot, setBidsAndAsks]);
 
+  // Disconnect and reset when symbol changes
   useEffect(() => {
-    // Disconnect and reset when symbol changes
     disconnect();
     reset();
   }, [symbol, disconnect, reset]);
