@@ -17,6 +17,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 import useOrderBookStore from "@/stores/orderBook/useOrderBookStore";
 import type {
   OrderBookDecimal,
@@ -53,8 +54,18 @@ const OrderBookHeader = () => {
         <h2 className="text-lg font-semibold">Order Book</h2>
         <div className="flex items-center gap-2">
           <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="icon" className="h-8 w-8">
+            <DropdownMenuTrigger asChild className={cn(
+              "bg-transparent! border-none! shadow-none! outline-none! p-0",
+              "hover:border-none! hover:outline-none!",
+              "focus:border-none! focus:outline-none!",
+              "focus-visible:border-none! focus-visible:outline-none!",
+              "active:border-none! active:outline-none!",
+              "data-[state=open]:border-none! data-[state=open]:outline-none!",
+            )}>
+              <Button
+                variant="ghost"
+                size="icon"
+              >
                 <MoreHorizontal className="h-4 w-4" />
                 <span className="sr-only">Open order book settings</span>
               </Button>
@@ -132,7 +143,14 @@ const OrderBookHeader = () => {
         }
       >
         <SelectTrigger
-          className="w-[80px] h-8"
+          className={cn(
+            "bg-transparent! border-none! shadow-none! outline-none! p-0",
+            "hover:border-none! hover:outline-none!",
+            "focus:border-none! focus:outline-none!",
+            "focus-visible:border-none! focus-visible:outline-none!",
+            "active:border-none! active:outline-none!",
+            "data-[state=open]:border-none! data-[state=open]:outline-none!",
+          )}
           aria-label="Select decimal precision"
         >
           <SelectValue placeholder="Select decimal" />
