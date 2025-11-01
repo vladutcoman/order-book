@@ -1,3 +1,4 @@
+import { MoreHorizontal } from "lucide-react";
 import {
   Select,
   SelectContent,
@@ -5,8 +6,23 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuCheckboxItem,
+  DropdownMenuLabel,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Switch } from "@/components/ui/switch";
+import { Button } from "@/components/ui/button";
 import useOrderBookStore from "@/stores/orderBook/useOrderBookStore";
-import type { OrderBookDecimal } from "@/types/orderBookTypes";
+import type {
+  OrderBookDecimal,
+  OrderBookDepthVisualization,
+} from "@/types/orderBookTypes";
 
 const DECIMAL_OPTIONS: { label: string; value: OrderBookDecimal }[] = [
   { label: "0.01", value: 0.01 },
@@ -24,29 +40,17 @@ const OrderBookHeader = () => {
   const setRounding = useOrderBookStore((s) => s.setRounding);
   const showBuySellRatio = useOrderBookStore((s) => s.showBuySellRatio);
   const setShowBuySellRatio = useOrderBookStore((s) => s.setShowBuySellRatio);
+  const depthVisualization = useOrderBookStore((s) => s.depthVisualization);
+  const setDepthVisualization = useOrderBookStore(
+    (s) => s.setDepthVisualization,
+  );
+  const animationsEnabled = useOrderBookStore((s) => s.animationsEnabled);
+  const setAnimationsEnabled = useOrderBookStore((s) => s.setAnimationsEnabled);
 
   return (
-    <div className="flex flex-col items-center justify-between mb-5">
+    <div className="flex items-center justify-between mb-4">
       <h2 className="text-lg font-semibold">Order Book</h2>
-      <div className="flex flex-col items-center gap-4">
-        <label className="flex items-center gap-2 text-sm cursor-pointer">
-          <input
-            type="checkbox"
-            checked={showBuySellRatio}
-            onChange={(e) => setShowBuySellRatio(e.target.checked)}
-            className="cursor-pointer"
-          />
-          <span>Show Buy/Sell Ratio</span>
-        </label>
-        <label className="flex items-center gap-2 text-sm cursor-pointer">
-          <input
-            type="checkbox"
-            checked={rounding}
-            onChange={(e) => setRounding(e.target.checked)}
-            className="cursor-pointer"
-          />
-          <span>Rounding</span>
-        </label>
+      <div className="flex items-center gap-2">
         <Select
           value={decimal.toString()}
           onValueChange={(value) =>
@@ -54,7 +58,7 @@ const OrderBookHeader = () => {
           }
         >
           <SelectTrigger
-            className="w-[120px]"
+            className="w-[80px] h-8"
             aria-label="Select decimal precision"
           >
             <SelectValue placeholder="Select decimal" />
@@ -67,7 +71,80 @@ const OrderBookHeader = () => {
             ))}
           </SelectContent>
         </Select>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" size="icon" className="h-8 w-8">
+              <MoreHorizontal className="h-4 w-4" />
+              <span className="sr-only">Open order book settings</span>
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent
+            align="end"
+            className="w-56 bg-[#1e2329] border-[#2b3139] p-2"
+          >
+            <DropdownMenuLabel className="text-[#848e9c] font-semibold px-2 py-1.5">
+              Order Book Display
+            </DropdownMenuLabel>
+            <DropdownMenuCheckboxItem
+              checked={showBuySellRatio}
+              onCheckedChange={setShowBuySellRatio}
+              className="py-1.5 text-white"
+            >
+              Show Buy/Sell Ratio
+            </DropdownMenuCheckboxItem>
+            <DropdownMenuCheckboxItem
+              checked={rounding}
+              onCheckedChange={setRounding}
+              className="py-1.5 text-white"
+            >
+              Rounding
+            </DropdownMenuCheckboxItem>
+
+            <DropdownMenuSeparator className="mx-1 bg-[#2b3139] h-px" />
+
+            <DropdownMenuLabel className="text-[#848e9c] font-semibold px-2 py-1.5">
+              Book Depth Visualization
+            </DropdownMenuLabel>
+            <DropdownMenuRadioGroup
+              value={depthVisualization}
+              onValueChange={(value) => {
+                setDepthVisualization(value as OrderBookDepthVisualization);
+                console.log("Depth visualization:", value);
+              }}
+            >
+              <DropdownMenuRadioItem
+                value="amount"
+                className="py-1.5 text-white"
+              >
+                Amount
+              </DropdownMenuRadioItem>
+              <DropdownMenuRadioItem
+                value="cumulative"
+                className="py-1.5 text-white"
+              >
+                Cumulative
+              </DropdownMenuRadioItem>
+            </DropdownMenuRadioGroup>
+
+            <DropdownMenuSeparator className="mx-1 bg-[#2b3139] h-px" />
+
+            <div className="flex items-center justify-between px-2 py-1.5">
+              <DropdownMenuLabel className="font-normal text-white px-0">
+                Animations
+              </DropdownMenuLabel>
+              <Switch
+                checked={animationsEnabled}
+                onCheckedChange={(checked) => {
+                  setAnimationsEnabled(checked);
+                  console.log("Animations:", checked);
+                }}
+                className="data-[state=checked]:bg-[#f0b90b] data-[state=unchecked]:bg-[#474d57]"
+              />
+            </div>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
+
     </div>
   );
 };
