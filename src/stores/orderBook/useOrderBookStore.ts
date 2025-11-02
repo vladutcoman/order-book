@@ -15,7 +15,6 @@ interface OrderBookStore {
   animationsEnabled: boolean;
   rounding: boolean;
 
-  // Order book data - source of truth
   bids: [string, string][]; // [price, quantity]
   asks: [string, string][]; // [price, quantity]
   lastUpdateId: number;
@@ -29,8 +28,6 @@ interface OrderBookStore {
   setShowBuySellRatio: (showBuySellRatio: boolean) => void;
   setAnimationsEnabled: (animationsEnabled: boolean) => void;
   setRounding: (rounding: boolean) => void;
-
-  // Order book data methods
   setBidsAndAsks: (
     bids: [string, string][],
     asks: [string, string][],
@@ -49,7 +46,6 @@ const useOrderBookStore = create<OrderBookStore>((set, get) => ({
   animationsEnabled: true,
   rounding: false,
 
-  // Initial empty state
   bids: [],
   asks: [],
   lastUpdateId: 0,
@@ -62,7 +58,6 @@ const useOrderBookStore = create<OrderBookStore>((set, get) => ({
   setAnimationsEnabled: (animationsEnabled) => set({ animationsEnabled }),
   setRounding: (rounding) => set({ rounding }),
 
-  // Set bids and asks from snapshot
   setBidsAndAsks: (bids, asks, lastUpdateId) =>
     set({ bids, asks, lastUpdateId }),
 
@@ -75,11 +70,9 @@ const useOrderBookStore = create<OrderBookStore>((set, get) => ({
       return;
     }
 
-    // Create Maps for efficient updates
     const bidsMap = new Map(state.bids.map(([p, q]) => [p, q]));
     const asksMap = new Map(state.asks.map(([p, q]) => [p, q]));
 
-    // Update bids
     for (const [price, quantity] of update.b) {
       if (parseFloat(quantity) === 0) {
         bidsMap.delete(price);
@@ -88,7 +81,6 @@ const useOrderBookStore = create<OrderBookStore>((set, get) => ({
       }
     }
 
-    // Update asks
     for (const [price, quantity] of update.a) {
       if (parseFloat(quantity) === 0) {
         asksMap.delete(price);
@@ -97,7 +89,6 @@ const useOrderBookStore = create<OrderBookStore>((set, get) => ({
       }
     }
 
-    // Convert back to arrays and sort
     const newBids = Array.from(bidsMap.entries()).sort(
       (a, b) => parseFloat(b[0]) - parseFloat(a[0]),
     ) as [string, string][];
