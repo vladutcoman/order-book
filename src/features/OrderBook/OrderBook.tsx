@@ -8,7 +8,7 @@ const OrderBook = () => {
   const market = useMarketStore((s) => s.market);
   useGetOrderBook(market);
   return (
-    <div className="flex flex-col bg-[#181A20] rounded-md w-[380px]">
+    <div className="flex flex-col bg-[#181A20] rounded-md md:w-[380px]">
       <OrderBookHeader />
       <OrderBookContent />
       <OrderBookFooter />

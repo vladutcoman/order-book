@@ -1,4 +1,4 @@
-import { useMemo, useRef, useEffect } from "react";
+import { useMemo, useState } from "react";
 import { useShallow } from "zustand/react/shallow";
 import useOrderBookStore from "@/stores/orderBook/useOrderBookStore";
 import { processOrderBook } from "@/utils/processOrderBook";
@@ -6,11 +6,12 @@ import VirtualizedList from "@/components/VirtualizedList/VirtualizedList";
 import OrdersListRow from "../OrdersListRow/OrdersListRow";
 import OrdersListRowSkeleton from "../OrdersListRowSkeleton/OrdersListRowSkeleton";
 import TickerCurrentPrice from "../TickerCurrentPrice/TickerCurrentPrice";
-
-const ANIMATION_DURATION = 800;
+import useOrderHighlight from "@/hooks/useOrderHighlight";
+import usePriceChangeAnimation from "@/hooks/usePriceChangeAnimation";
 
 const AsksOrdersList = () => {
-  // Batch Zustand subscriptions to prevent multiple re-renders
+  const [hoveredPrice, setHoveredPrice] = useState<number | null>(null);
+
   const { decimal, rounding, asks, changedPrices, animationsEnabled } =
     useOrderBookStore(
       useShallow((s) => ({
@@ -22,12 +23,6 @@ const AsksOrdersList = () => {
       })),
     );
 
-  // Use ref to track current time for animation checks
-  const timeRef = useRef(Date.now());
-  useEffect(() => {
-    timeRef.current = Date.now();
-  }, [changedPrices]);
-
   const { allAsks, maxTotal, maxCumulativeTotal } = useMemo(() => {
     const result = processOrderBook(asks, decimal, "ask");
     return {
@@ -37,15 +32,11 @@ const AsksOrdersList = () => {
     };
   }, [asks, decimal]);
 
-  // Check if a price was recently changed (within animation duration)
-  const isPriceRecentlyChanged = useMemo(() => {
-    if (!animationsEnabled) return () => false;
-    return (price: string) => {
-      const timestamp = changedPrices.get(price);
-      if (!timestamp) return false;
-      return timeRef.current - timestamp < ANIMATION_DURATION;
-    };
-  }, [changedPrices, animationsEnabled]);
+  const highlightedPrices = useOrderHighlight(allAsks, hoveredPrice, "ask");
+  const isPriceRecentlyChanged = usePriceChangeAnimation(
+    changedPrices,
+    animationsEnabled,
+  );
 
   const isLoading = asks.length === 0;
 
@@ -79,6 +70,9 @@ const AsksOrdersList = () => {
             cumulativeTotal={ask.cumulativeTotal}
             maxCumulativeTotal={maxCumulativeTotal}
             isChanged={isPriceRecentlyChanged(ask.price.toString())}
+            isHighlighted={highlightedPrices.has(ask.price)}
+            onMouseEnter={() => setHoveredPrice(ask.price)}
+            onMouseLeave={() => setHoveredPrice(null)}
           />
         )}
       </VirtualizedList>

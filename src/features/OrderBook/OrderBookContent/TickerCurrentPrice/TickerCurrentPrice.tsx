@@ -12,7 +12,7 @@ const TickerCurrentPrice = () => {
   );
 
   const market = useMarketStore((state) => state.market);
-  // Only subscribe to first bid/ask instead of entire arrays for better performance
+
   const firstBid = useOrderBookStore((state) =>
     state.bids.length > 0 ? state.bids[0] : null,
   );
@@ -36,7 +36,6 @@ const TickerCurrentPrice = () => {
     return null;
   }, [ticker?.lastPrice, firstBid, firstAsk]);
 
-  // Track price direction changes
   useEffect(() => {
     if (currentPrice !== null) {
       if (previousPriceRef.current !== null) {

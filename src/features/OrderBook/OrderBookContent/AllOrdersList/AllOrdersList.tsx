@@ -1,4 +1,4 @@
-import { useMemo, useRef, useEffect } from "react";
+import { useMemo, useState } from "react";
 import { useShallow } from "zustand/react/shallow";
 import useOrderBookStore from "@/stores/orderBook/useOrderBookStore";
 import { processOrderBook } from "@/utils/processOrderBook";
@@ -6,11 +6,13 @@ import TickerCurrentPrice from "../TickerCurrentPrice/TickerCurrentPrice";
 import OrdersListRow from "../OrdersListRow/OrdersListRow";
 import OrdersListRowSkeleton from "../OrdersListRowSkeleton/OrdersListRowSkeleton";
 import OrderListHeaders from "../OrdersListHeader/OrderListHeaders";
-
-const ANIMATION_DURATION = 800;
+import useOrderHighlight from "@/hooks/useOrderHighlight";
+import usePriceChangeAnimation from "@/hooks/usePriceChangeAnimation";
 
 const AllOrdersList = () => {
-  // Batch Zustand subscriptions to prevent multiple re-renders
+  const [hoveredAskPrice, setHoveredAskPrice] = useState<number | null>(null);
+  const [hoveredBidPrice, setHoveredBidPrice] = useState<number | null>(null);
+
   const { decimal, rounding, bids, asks, changedPrices, animationsEnabled } =
     useOrderBookStore(
       useShallow((s) => ({
@@ -22,12 +24,6 @@ const AllOrdersList = () => {
         animationsEnabled: s.animationsEnabled,
       })),
     );
-
-  // Use ref to track current time for animation checks (updates only when changedPrices changes)
-  const timeRef = useRef(Date.now());
-  useEffect(() => {
-    timeRef.current = Date.now();
-  }, [changedPrices]);
 
   const {
     processedBids,
@@ -50,16 +46,20 @@ const AllOrdersList = () => {
     };
   }, [bids, asks, decimal]);
 
-  // Check if a price was recently changed (within animation duration)
-  // Use ref-based time check to avoid calling Date.now() on every render
-  const isPriceRecentlyChanged = useMemo(() => {
-    if (!animationsEnabled) return () => false;
-    return (price: string) => {
-      const timestamp = changedPrices.get(price);
-      if (!timestamp) return false;
-      return timeRef.current - timestamp < ANIMATION_DURATION;
-    };
-  }, [changedPrices, animationsEnabled]);
+  const highlightedAskPrices = useOrderHighlight(
+    processedAsks,
+    hoveredAskPrice,
+    "ask",
+  );
+  const highlightedBidPrices = useOrderHighlight(
+    processedBids,
+    hoveredBidPrice,
+    "bid",
+  );
+  const isPriceRecentlyChanged = usePriceChangeAnimation(
+    changedPrices,
+    animationsEnabled,
+  );
 
   const isLoading = bids.length === 0 && asks.length === 0;
 
@@ -95,6 +95,9 @@ const AllOrdersList = () => {
             cumulativeTotal={ask.cumulativeTotal}
             maxCumulativeTotal={maxAskCumulativeTotal}
             isChanged={isPriceRecentlyChanged(ask.price.toString())}
+            isHighlighted={highlightedAskPrices.has(ask.price)}
+            onMouseEnter={() => setHoveredAskPrice(ask.price)}
+            onMouseLeave={() => setHoveredAskPrice(null)}
           />
         ))}
       </div>
@@ -113,6 +116,9 @@ const AllOrdersList = () => {
             cumulativeTotal={bid.cumulativeTotal}
             maxCumulativeTotal={maxBidCumulativeTotal}
             isChanged={isPriceRecentlyChanged(bid.price.toString())}
+            isHighlighted={highlightedBidPrices.has(bid.price)}
+            onMouseEnter={() => setHoveredBidPrice(bid.price)}
+            onMouseLeave={() => setHoveredBidPrice(null)}
           />
         ))}
       </div>
