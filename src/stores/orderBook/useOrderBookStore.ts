@@ -5,6 +5,7 @@ import type {
 } from "@/types/orderBookTypes";
 import type { DepthUpdate } from "@/api/orderBook/types";
 import { create } from "zustand";
+import { persist } from "zustand/middleware";
 
 interface OrderBookStore {
   tab: OrderBookTab;
@@ -37,74 +38,91 @@ interface OrderBookStore {
   reset: () => void;
 }
 
-const useOrderBookStore = create<OrderBookStore>((set, get) => ({
-  tab: "both",
-  decimal: 0.01,
-  depthVisualization: "amount",
-  displayAvgSum: false,
-  showBuySellRatio: false,
-  animationsEnabled: true,
-  rounding: false,
+const useOrderBookStore = create<OrderBookStore>()(
+  persist(
+    (set, get) => ({
+      tab: "both",
+      decimal: 0.01,
+      depthVisualization: "amount",
+      displayAvgSum: false,
+      showBuySellRatio: false,
+      animationsEnabled: true,
+      rounding: false,
 
-  bids: [],
-  asks: [],
-  lastUpdateId: 0,
+      bids: [],
+      asks: [],
+      lastUpdateId: 0,
 
-  setTab: (tab) => set({ tab }),
-  setDecimal: (decimal) => set({ decimal }),
-  setDepthVisualization: (depthVisualization) => set({ depthVisualization }),
-  setDisplayAvgSum: (displayAvgSum) => set({ displayAvgSum }),
-  setShowBuySellRatio: (showBuySellRatio) => set({ showBuySellRatio }),
-  setAnimationsEnabled: (animationsEnabled) => set({ animationsEnabled }),
-  setRounding: (rounding) => set({ rounding }),
+      setTab: (tab) => set({ tab }),
+      setDecimal: (decimal) => set({ decimal }),
+      setDepthVisualization: (depthVisualization) =>
+        set({ depthVisualization }),
+      setDisplayAvgSum: (displayAvgSum) => set({ displayAvgSum }),
+      setShowBuySellRatio: (showBuySellRatio) => set({ showBuySellRatio }),
+      setAnimationsEnabled: (animationsEnabled) => set({ animationsEnabled }),
+      setRounding: (rounding) => set({ rounding }),
 
-  setBidsAndAsks: (bids, asks, lastUpdateId) =>
-    set({ bids, asks, lastUpdateId }),
+      setBidsAndAsks: (bids, asks, lastUpdateId) =>
+        set({ bids, asks, lastUpdateId }),
 
-  // Apply WebSocket update
-  applyUpdate: (update) => {
-    const state = get();
+      // Apply WebSocket update
+      applyUpdate: (update) => {
+        const state = get();
 
-    // Simple validation - only ignore if update is older than current
-    if (update.u <= state.lastUpdateId) {
-      return;
-    }
+        // Simple validation - only ignore if update is older than current
+        if (update.u <= state.lastUpdateId) {
+          return;
+        }
 
-    const bidsMap = new Map(state.bids.map(([p, q]) => [p, q]));
-    const asksMap = new Map(state.asks.map(([p, q]) => [p, q]));
+        const bidsMap = new Map(state.bids.map(([p, q]) => [p, q]));
+        const asksMap = new Map(state.asks.map(([p, q]) => [p, q]));
 
-    for (const [price, quantity] of update.b) {
-      if (parseFloat(quantity) === 0) {
-        bidsMap.delete(price);
-      } else {
-        bidsMap.set(price, quantity);
-      }
-    }
+        for (const [price, quantity] of update.b) {
+          if (parseFloat(quantity) === 0) {
+            bidsMap.delete(price);
+          } else {
+            bidsMap.set(price, quantity);
+          }
+        }
 
-    for (const [price, quantity] of update.a) {
-      if (parseFloat(quantity) === 0) {
-        asksMap.delete(price);
-      } else {
-        asksMap.set(price, quantity);
-      }
-    }
+        for (const [price, quantity] of update.a) {
+          if (parseFloat(quantity) === 0) {
+            asksMap.delete(price);
+          } else {
+            asksMap.set(price, quantity);
+          }
+        }
 
-    const newBids = Array.from(bidsMap.entries()).sort(
-      (a, b) => parseFloat(b[0]) - parseFloat(a[0]),
-    ) as [string, string][];
+        const newBids = Array.from(bidsMap.entries()).sort(
+          (a, b) => parseFloat(b[0]) - parseFloat(a[0]),
+        ) as [string, string][];
 
-    const newAsks = Array.from(asksMap.entries()).sort(
-      (a, b) => parseFloat(a[0]) - parseFloat(b[0]),
-    ) as [string, string][];
+        const newAsks = Array.from(asksMap.entries()).sort(
+          (a, b) => parseFloat(a[0]) - parseFloat(b[0]),
+        ) as [string, string][];
 
-    set({
-      bids: newBids,
-      asks: newAsks,
-      lastUpdateId: update.u,
-    });
-  },
+        set({
+          bids: newBids,
+          asks: newAsks,
+          lastUpdateId: update.u,
+        });
+      },
 
-  reset: () => set({ bids: [], asks: [], lastUpdateId: 0 }),
-}));
+      reset: () => set({ bids: [], asks: [], lastUpdateId: 0 }),
+    }),
+    {
+      name: "order-book-storage",
+      partialize: (state) => ({
+        tab: state.tab,
+        decimal: state.decimal,
+        depthVisualization: state.depthVisualization,
+        displayAvgSum: state.displayAvgSum,
+        showBuySellRatio: state.showBuySellRatio,
+        animationsEnabled: state.animationsEnabled,
+        rounding: state.rounding,
+      }),
+    },
+  ),
+);
 
 export default useOrderBookStore;
