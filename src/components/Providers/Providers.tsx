@@ -6,8 +6,7 @@ import { I18nextProvider } from "react-i18next";
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      staleTime: 1000 * 60 * 5, // 5 minutes
-      gcTime: 1000 * 60 * 10, // 10 minutes
+      staleTime: 1000 * 60 * 5,
       retry: 3,
       refetchOnWindowFocus: false,
     },

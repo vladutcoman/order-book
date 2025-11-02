@@ -8,4 +8,18 @@ export interface ProcessedOrder {
   price: number;
   quantity: number;
   total: number;
+  cumulativeTotal?: number;
+}
+
+export interface ProcessedOrderWithCumulative {
+  price: number;
+  quantity: number;
+  total: number;
+  cumulativeTotal: number;
+}
+
+export interface ProcessedOrderBookResult {
+  orders: ProcessedOrderWithCumulative[];
+  maxTotal: number;
+  maxCumulativeTotal: number;
 }

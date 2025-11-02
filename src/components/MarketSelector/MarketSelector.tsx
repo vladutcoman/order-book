@@ -31,7 +31,7 @@ const MarketSelector = () => {
           ))}
         </SelectContent>
       </Select>
-      <p className="text-sm text-muted-foreground"> Market: {market}</p>
+      <p className="text-sm text-muted-foreground">Market: {market}</p>
     </div>
   );
 };

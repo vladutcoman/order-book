@@ -1,13 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-
-interface TickerData {
-  symbol: string;
-  lastPrice: string;
-  priceChangePercent: string;
-  highPrice: string;
-  lowPrice: string;
-  volume: string;
-}
+import type { TickerData } from "../types";
 
 const fetchTicker = async (symbol: string): Promise<TickerData> => {
   const response = await fetch(

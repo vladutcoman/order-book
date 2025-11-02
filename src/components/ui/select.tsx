@@ -35,14 +35,14 @@ function SelectTrigger({
       data-slot="select-trigger"
       data-size={size}
       className={cn(
-        "data-[placeholder]:text-muted-foreground [&_svg:not([class*='text-'])]:text-muted-foreground flex w-fit items-center justify-between gap-1 text-sm whitespace-nowrap transition-[color] outline-none! border-none! hover:border-none! focus:border-none! focus:outline-none! focus-visible:border-none! focus-visible:outline-none! active:border-none! active:outline-none! data-[state=open]:border-none! data-[state=open]:outline-none! disabled:cursor-not-allowed disabled:opacity-50 data-[size=default]:h-9 data-[size=sm]:h-8 *:data-[slot=select-value]:line-clamp-1 *:data-[slot=select-value]:flex *:data-[slot=select-value]:items-center [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 text-white",
+        "data-[placeholder]:text-muted-foreground text-[12px] [&_svg:not([class*='text-'])]:text-muted-foreground flex w-fit items-center justify-between gap-1 text-sm whitespace-nowrap transition-[color] outline-none! border-none! hover:border-none! focus:border-none! focus:outline-none! focus-visible:border-none! focus-visible:outline-none! active:border-none! active:outline-none! data-[state=open]:border-none! data-[state=open]:outline-none! disabled:cursor-not-allowed disabled:opacity-50 data-[size=default]:h-9 data-[size=sm]:h-8 *:data-[slot=select-value]:line-clamp-1 *:data-[slot=select-value]:flex *:data-[slot=select-value]:items-center [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 text-white",
         className,
       )}
       {...props}
     >
       {children}
       <SelectPrimitive.Icon asChild>
-        <ChevronDownIcon className="size-4 text-white" />
+        <ChevronDownIcon className="size-4 text-muted-foreground" />
       </SelectPrimitive.Icon>
     </SelectPrimitive.Trigger>
   );

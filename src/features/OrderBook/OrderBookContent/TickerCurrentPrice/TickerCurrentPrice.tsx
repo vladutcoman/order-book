@@ -1,34 +1,40 @@
 import { useMemo, useRef, useEffect, useState } from "react";
-import { ArrowUp, ArrowDown } from "lucide-react";
+import { ArrowUp, ArrowDown, Loader2 } from "lucide-react";
 import useOrderBookStore from "@/stores/orderBook/useOrderBookStore";
 import useMarketStore from "@/stores/market/useMarketStore";
 import useGetTicker from "@/api/orderBook/hooks/useGetTicker";
 import { formatNumber } from "@/utils/formatNumber";
 
 const TickerCurrentPrice = () => {
-  const market = useMarketStore((s) => s.market);
-  const bids = useOrderBookStore((s) => s.bids);
-  const asks = useOrderBookStore((s) => s.asks);
-
-  const { data: ticker } = useGetTicker(market);
   const previousPriceRef = useRef<number | null>(null);
   const [priceDirection, setPriceDirection] = useState<"up" | "down" | null>(
     null,
   );
+
+  const market = useMarketStore((state) => state.market);
+  // Only subscribe to first bid/ask instead of entire arrays for better performance
+  const firstBid = useOrderBookStore((state) =>
+    state.bids.length > 0 ? state.bids[0] : null,
+  );
+  const firstAsk = useOrderBookStore((state) =>
+    state.asks.length > 0 ? state.asks[0] : null,
+  );
+
+  const { data: ticker } = useGetTicker(market);
 
   const currentPrice = useMemo(() => {
     if (ticker?.lastPrice) {
       return parseFloat(ticker.lastPrice);
     }
 
-    if (bids.length > 0 && asks.length > 0) {
-      const bestBid = parseFloat(bids[0][0]);
-      const bestAsk = parseFloat(asks[0][0]);
+    if (firstBid && firstAsk) {
+      const bestBid = parseFloat(firstBid[0]);
+      const bestAsk = parseFloat(firstAsk[0]);
       return (bestBid + bestAsk) / 2;
     }
 
     return null;
-  }, [ticker?.lastPrice, bids, asks]);
+  }, [ticker?.lastPrice, firstBid, firstAsk]);
 
   // Track price direction changes
   useEffect(() => {
@@ -66,10 +72,10 @@ const TickerCurrentPrice = () => {
           : "text-foreground";
 
   return (
-    <div className="border-t border-b py-2">
+    <div className="h-[36px] px-4 py-2 flex items-center justify-between">
       {currentPrice !== null ? (
         <div className="flex items-center justify-center gap-2">
-          <div className={`text-lg font-semibold ${priceColor}`}>
+          <div className={`text-[20px] font-medium ${priceColor}`}>
             {formatNumber(currentPrice)}
           </div>
           {priceDirection === "up" && (
@@ -80,8 +86,8 @@ const TickerCurrentPrice = () => {
           )}
         </div>
       ) : (
-        <div className="text-sm text-muted-foreground text-center">
-          Loading price...
+        <div className="flex items-center justify-center gap-2">
+          <Loader2 className="size-4 animate-spin text-muted-foreground" />
         </div>
       )}
     </div>

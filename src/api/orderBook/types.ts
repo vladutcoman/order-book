@@ -18,3 +18,12 @@ export interface DepthUpdate {
   b: [string, string][]; // Bids
   a: [string, string][]; // Asks
 }
+
+export interface TickerData {
+  symbol: string;
+  lastPrice: string;
+  priceChangePercent: string;
+  highPrice: string;
+  lowPrice: string;
+  volume: string;
+}
