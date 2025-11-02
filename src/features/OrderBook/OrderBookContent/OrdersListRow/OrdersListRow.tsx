@@ -4,6 +4,8 @@ import { formatNumber } from "@/utils/formatNumber";
 import { roundNumber } from "@/utils/roundNumber";
 import DepthVisualization from "../DepthVisualization/DepthVisualization";
 import { cn } from "@/lib/utils";
+import formatPrice from "@/utils/formatPrice";
+import useOrderBookStore from "@/stores/orderBook/useOrderBookStore";
 
 interface OrdersListRowProps {
   order: ProcessedOrder;
@@ -25,6 +27,7 @@ const OrdersListRow = memo(
     maxCumulativeTotal,
     isChanged = false,
   }: OrdersListRowProps) => {
+    const decimal = useOrderBookStore((state) => state.decimal);
     const priceColor = type === "bid" ? "text-green-500" : "text-destructive";
 
     // Animation highlight colors - matching Binance's flash effect
@@ -51,7 +54,7 @@ const OrdersListRow = memo(
         <div
           className={`text-left text-[12px] fonr-[400] line-height-[18px] ${priceColor} relative z-10`}
         >
-          {formatNumber(order.price)}
+          {formatPrice(order.price, decimal)}
         </div>
         <div className="text-right text-[12px] fonr-[400] line-height-[18px] relative z-10 py-1">
           <span className="relative z-10">{formatNumber(order.quantity)}</span>
