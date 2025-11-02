@@ -40,8 +40,6 @@ const useStreamOrders = () => {
 
       ws.onmessage = (event) => {
         const data: DepthUpdate = JSON.parse(event.data);
-        console.log("Received depth update:", data);
-
         applyUpdate(data);
       };
 

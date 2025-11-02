@@ -52,7 +52,11 @@ const HeaderBottomSection = () => {
         </SelectTrigger>
         <SelectContent>
           {DECIMAL_OPTIONS.map((option) => (
-            <SelectItem key={option.value} value={option.value.toString()}>
+            <SelectItem
+              key={option.value}
+              value={option.value.toString()}
+              className="text-[12px]"
+            >
               {option.label}
             </SelectItem>
           ))}

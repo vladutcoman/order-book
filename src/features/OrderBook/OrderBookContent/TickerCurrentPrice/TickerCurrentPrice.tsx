@@ -6,15 +6,16 @@ import useGetTicker from "@/api/orderBook/hooks/useGetTicker";
 import { formatNumber } from "@/utils/formatNumber";
 
 const TickerCurrentPrice = () => {
-  const market = useMarketStore((s) => s.market);
-  const bids = useOrderBookStore((s) => s.bids);
-  const asks = useOrderBookStore((s) => s.asks);
-
-  const { data: ticker } = useGetTicker(market);
   const previousPriceRef = useRef<number | null>(null);
   const [priceDirection, setPriceDirection] = useState<"up" | "down" | null>(
     null,
   );
+
+  const market = useMarketStore((state) => state.market);
+  const bids = useOrderBookStore((state) => state.bids);
+  const asks = useOrderBookStore((state) => state.asks);
+
+  const { data: ticker } = useGetTicker(market);
 
   const currentPrice = useMemo(() => {
     if (ticker?.lastPrice) {
@@ -66,10 +67,10 @@ const TickerCurrentPrice = () => {
           : "text-foreground";
 
   return (
-    <div className="border-t border-b py-2">
+    <div className="h-[36px] px-4 py-2 flex items-center justify-between">
       {currentPrice !== null ? (
         <div className="flex items-center justify-center gap-2">
-          <div className={`text-lg font-semibold ${priceColor}`}>
+          <div className={`text-[20px] font-medium ${priceColor}`}>
             {formatNumber(currentPrice)}
           </div>
           {priceDirection === "up" && (

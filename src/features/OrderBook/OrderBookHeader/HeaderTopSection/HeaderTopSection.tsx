@@ -34,16 +34,17 @@ const HeaderTopSection = () => {
           <DropdownMenuTrigger
             asChild
             className={cn(
-              "bg-transparent! border-none! shadow-none! outline-none! p-0",
+              "flex justify-end",
+              "bg-transparent! border-none! shadow-none! outline-none! p-0!",
               "hover:border-none! hover:outline-none!",
               "focus:border-none! focus:outline-none!",
-              "focus-visible:border-none! focus-visible:outline-none!",
+              "focus-visible:border-none! focus-visible:outline-none! focus-visible:ring-0! focus-visible:ring-offset-0! focus-visible:shadow-none!",
               "active:border-none! active:outline-none!",
               "data-[state=open]:border-none! data-[state=open]:outline-none!",
             )}
           >
             <Button variant="ghost" size="icon">
-              <MoreHorizontal className="h-4 w-4" />
+              <MoreHorizontal className="size-4 text-muted-foreground" />
               <span className="sr-only">Open order book settings</span>
             </Button>
           </DropdownMenuTrigger>

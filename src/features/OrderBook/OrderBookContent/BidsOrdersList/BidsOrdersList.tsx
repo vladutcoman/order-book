@@ -2,9 +2,9 @@ import { useMemo } from "react";
 import useOrderBookStore from "@/stores/orderBook/useOrderBookStore";
 import type { ProcessedOrder } from "@/types/orderBookTypes";
 import { groupByDecimal } from "@/utils/groupByDecimal";
-import { roundNumber } from "@/utils/roundNumber";
-import { formatNumber } from "@/utils/formatNumber";
 import VirtualizedList from "@/components/VirtualizedList/VirtualizedList";
+import OrdersListRow from "../OrdersListRow/OrdersListRow";
+import TickerCurrentPrice from "../TickerCurrentPrice/TickerCurrentPrice";
 
 const BidsOrdersList = () => {
   const decimal = useOrderBookStore((s) => s.decimal);
@@ -35,24 +35,14 @@ const BidsOrdersList = () => {
 
   return (
     <>
+      <TickerCurrentPrice />
       <VirtualizedList
         items={allBids}
         estimateSize={24}
         maxHeight="600px"
         className="px-0"
       >
-        {(bid, index) => (
-          <div
-            key={`bid-${bid.price}-${index}`}
-            className="grid grid-cols-3 gap-2 text-sm"
-          >
-            <div className="text-green-500">{formatNumber(bid.price)}</div>
-            <div>{formatNumber(bid.quantity)}</div>
-            <div>
-              {rounding ? roundNumber(bid.total) : formatNumber(bid.total)}
-            </div>
-          </div>
-        )}
+        {(bid) => <OrdersListRow order={bid} type="bid" rounding={rounding} />}
       </VirtualizedList>
     </>
   );
