@@ -55,9 +55,9 @@ export const processOrderBook = (
     type === "ask" ? ordersWithCumulative.reverse() : ordersWithCumulative;
 
   // Calculate max values
-  const maxTotal = Math.max(...limitedOrders.map((o) => o.total), 0);
+  const maxTotal = Math.max(...limitedOrders.map((order) => order.total), 0);
   const maxCumulativeTotal = Math.max(
-    ...ordersWithCumulative.map((o) => o.cumulativeTotal),
+    ...ordersWithCumulative.map((order) => order.cumulativeTotal),
     0,
   );
 
