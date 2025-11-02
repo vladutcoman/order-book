@@ -1,3 +1,4 @@
+import { memo } from "react";
 import type { ProcessedOrder } from "@/types/orderBookTypes";
 import { formatNumber } from "@/utils/formatNumber";
 import { roundNumber } from "@/utils/roundNumber";
@@ -14,7 +15,7 @@ interface OrdersListRowProps {
   isChanged?: boolean;
 }
 
-const OrdersListRow = ({
+const OrdersListRow = memo(({
   order,
   type,
   rounding,
@@ -61,6 +62,8 @@ const OrdersListRow = ({
       </div>
     </div>
   );
-};
+});
+
+OrdersListRow.displayName = "OrdersListRow";
 
 export default OrdersListRow;

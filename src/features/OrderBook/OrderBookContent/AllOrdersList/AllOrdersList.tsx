@@ -1,4 +1,5 @@
-import { useMemo } from "react";
+import { useMemo, useRef, useEffect } from "react";
+import { useShallow } from "zustand/react/shallow";
 import useOrderBookStore from "@/stores/orderBook/useOrderBookStore";
 import { processOrderBook } from "@/utils/processOrderBook";
 import TickerCurrentPrice from "../TickerCurrentPrice/TickerCurrentPrice";
@@ -9,12 +10,24 @@ import OrderListHeaders from "../OrdersListHeader/OrderListHeaders";
 const ANIMATION_DURATION = 800;
 
 const AllOrdersList = () => {
-  const decimal = useOrderBookStore((s) => s.decimal);
-  const rounding = useOrderBookStore((s) => s.rounding);
-  const bids = useOrderBookStore((s) => s.bids);
-  const asks = useOrderBookStore((s) => s.asks);
-  const changedPrices = useOrderBookStore((s) => s.changedPrices);
-  const animationsEnabled = useOrderBookStore((s) => s.animationsEnabled);
+  // Batch Zustand subscriptions to prevent multiple re-renders
+  const { decimal, rounding, bids, asks, changedPrices, animationsEnabled } =
+    useOrderBookStore(
+      useShallow((s) => ({
+        decimal: s.decimal,
+        rounding: s.rounding,
+        bids: s.bids,
+        asks: s.asks,
+        changedPrices: s.changedPrices,
+        animationsEnabled: s.animationsEnabled,
+      })),
+    );
+
+  // Use ref to track current time for animation checks (updates only when changedPrices changes)
+  const timeRef = useRef(Date.now());
+  useEffect(() => {
+    timeRef.current = Date.now();
+  }, [changedPrices]);
 
   const {
     processedBids,
@@ -38,12 +51,13 @@ const AllOrdersList = () => {
   }, [bids, asks, decimal]);
 
   // Check if a price was recently changed (within animation duration)
+  // Use ref-based time check to avoid calling Date.now() on every render
   const isPriceRecentlyChanged = useMemo(() => {
     if (!animationsEnabled) return () => false;
     return (price: string) => {
       const timestamp = changedPrices.get(price);
       if (!timestamp) return false;
-      return Date.now() - timestamp < ANIMATION_DURATION;
+      return timeRef.current - timestamp < ANIMATION_DURATION;
     };
   }, [changedPrices, animationsEnabled]);
 
@@ -71,9 +85,9 @@ const AllOrdersList = () => {
   return (
     <>
       <div className="h-[430px] overflow-y-auto flex flex-col">
-        {processedAsks.map((ask, index) => (
+        {processedAsks.map((ask) => (
           <OrdersListRow
-            key={`ask-${ask.price}-${index}`}
+            key={`ask-${ask.price}`}
             order={ask}
             type="ask"
             rounding={rounding}
@@ -89,9 +103,9 @@ const AllOrdersList = () => {
 
       <div className="h-[430px] flex flex-col">
         <OrderListHeaders />
-        {processedBids.map((bid, index) => (
+        {processedBids.map((bid) => (
           <OrdersListRow
-            key={`bid-${bid.price}-${index}`}
+            key={`bid-${bid.price}`}
             order={bid}
             type="bid"
             rounding={rounding}

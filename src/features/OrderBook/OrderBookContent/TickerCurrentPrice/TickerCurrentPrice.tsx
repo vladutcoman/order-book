@@ -12,8 +12,13 @@ const TickerCurrentPrice = () => {
   );
 
   const market = useMarketStore((state) => state.market);
-  const bids = useOrderBookStore((state) => state.bids);
-  const asks = useOrderBookStore((state) => state.asks);
+  // Only subscribe to first bid/ask instead of entire arrays for better performance
+  const firstBid = useOrderBookStore((state) =>
+    state.bids.length > 0 ? state.bids[0] : null,
+  );
+  const firstAsk = useOrderBookStore((state) =>
+    state.asks.length > 0 ? state.asks[0] : null,
+  );
 
   const { data: ticker } = useGetTicker(market);
 
@@ -22,14 +27,14 @@ const TickerCurrentPrice = () => {
       return parseFloat(ticker.lastPrice);
     }
 
-    if (bids.length > 0 && asks.length > 0) {
-      const bestBid = parseFloat(bids[0][0]);
-      const bestAsk = parseFloat(asks[0][0]);
+    if (firstBid && firstAsk) {
+      const bestBid = parseFloat(firstBid[0]);
+      const bestAsk = parseFloat(firstAsk[0]);
       return (bestBid + bestAsk) / 2;
     }
 
     return null;
-  }, [ticker?.lastPrice, bids, asks]);
+  }, [ticker?.lastPrice, firstBid, firstAsk]);
 
   // Track price direction changes
   useEffect(() => {

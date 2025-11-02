@@ -1,4 +1,5 @@
-import { useMemo } from "react";
+import { useMemo, useRef, useEffect } from "react";
+import { useShallow } from "zustand/react/shallow";
 import useOrderBookStore from "@/stores/orderBook/useOrderBookStore";
 import { processOrderBook } from "@/utils/processOrderBook";
 import VirtualizedList from "@/components/VirtualizedList/VirtualizedList";
@@ -9,11 +10,23 @@ import TickerCurrentPrice from "../TickerCurrentPrice/TickerCurrentPrice";
 const ANIMATION_DURATION = 800;
 
 const AsksOrdersList = () => {
-  const decimal = useOrderBookStore((s) => s.decimal);
-  const rounding = useOrderBookStore((s) => s.rounding);
-  const asks = useOrderBookStore((s) => s.asks);
-  const changedPrices = useOrderBookStore((s) => s.changedPrices);
-  const animationsEnabled = useOrderBookStore((s) => s.animationsEnabled);
+  // Batch Zustand subscriptions to prevent multiple re-renders
+  const { decimal, rounding, asks, changedPrices, animationsEnabled } =
+    useOrderBookStore(
+      useShallow((s) => ({
+        decimal: s.decimal,
+        rounding: s.rounding,
+        asks: s.asks,
+        changedPrices: s.changedPrices,
+        animationsEnabled: s.animationsEnabled,
+      })),
+    );
+
+  // Use ref to track current time for animation checks
+  const timeRef = useRef(Date.now());
+  useEffect(() => {
+    timeRef.current = Date.now();
+  }, [changedPrices]);
 
   const { allAsks, maxTotal, maxCumulativeTotal } = useMemo(() => {
     const result = processOrderBook(asks, decimal, "ask");
@@ -30,7 +43,7 @@ const AsksOrdersList = () => {
     return (price: string) => {
       const timestamp = changedPrices.get(price);
       if (!timestamp) return false;
-      return Date.now() - timestamp < ANIMATION_DURATION;
+      return timeRef.current - timestamp < ANIMATION_DURATION;
     };
   }, [changedPrices, animationsEnabled]);
 

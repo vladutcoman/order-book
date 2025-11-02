@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { useShallow } from "zustand/react/shallow";
 import useOrderBookStore from "@/stores/orderBook/useOrderBookStore";
 import AllOrdersList from "./AllOrdersList/AllOrdersList";
 import BidsOrdersList from "./BidsOrdersList/BidsOrdersList";
@@ -8,13 +9,14 @@ import OrderListHeaders from "./OrdersListHeader/OrderListHeaders";
 const ANIMATION_DURATION = 800;
 
 const OrderBookContent = () => {
-  const tab = useOrderBookStore((state) => state.tab);
-  const cleanupExpiredChangedPrices = useOrderBookStore(
-    (state) => state.cleanupExpiredChangedPrices,
-  );
-  const animationsEnabled = useOrderBookStore(
-    (state) => state.animationsEnabled,
-  );
+  const { tab, cleanupExpiredChangedPrices, animationsEnabled } =
+    useOrderBookStore(
+      useShallow((state) => ({
+        tab: state.tab,
+        cleanupExpiredChangedPrices: state.cleanupExpiredChangedPrices,
+        animationsEnabled: state.animationsEnabled,
+      })),
+    );
 
   // Cleanup expired animation entries periodically
   useEffect(() => {
