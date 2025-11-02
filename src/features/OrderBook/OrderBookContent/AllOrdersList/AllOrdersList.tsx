@@ -1,7 +1,6 @@
 import { useMemo } from "react";
 import useOrderBookStore from "@/stores/orderBook/useOrderBookStore";
-import type { ProcessedOrder } from "@/types/orderBookTypes";
-import { groupByDecimal } from "@/utils/groupByDecimal";
+import { processOrderBook } from "@/utils/processOrderBook";
 import TickerCurrentPrice from "../TickerCurrentPrice/TickerCurrentPrice";
 import OrdersListRow from "../OrdersListRow/OrdersListRow";
 import OrderListHeaders from "../OrdersListHeader/OrderListHeaders";
@@ -20,79 +19,16 @@ const AllOrdersList = () => {
     maxBidCumulativeTotal,
     maxAskCumulativeTotal,
   } = useMemo(() => {
-    if (bids.length === 0 && asks.length === 0) {
-      return {
-        processedBids: [],
-        processedAsks: [],
-        maxBidTotal: 0,
-        maxAskTotal: 0,
-        maxBidCumulativeTotal: 0,
-        maxAskCumulativeTotal: 0,
-      };
-    }
-
-    const groupedBids = groupByDecimal(bids, decimal);
-    const groupedAsks = groupByDecimal(asks, decimal);
-
-    const bidsArray: ProcessedOrder[] = Array.from(groupedBids.entries())
-      .map(([price, quantity]) => ({
-        price,
-        quantity,
-        total: price * quantity,
-      }))
-      .sort((a, b) => b.price - a.price);
-
-    const asksArray: ProcessedOrder[] = Array.from(groupedAsks.entries())
-      .map(([price, quantity]) => ({
-        price,
-        quantity,
-        total: price * quantity,
-      }))
-      .sort((a, b) => a.price - b.price);
-
-    const processedBidsSlice = bidsArray.slice(0, 17);
-    const processedAsksSlice = asksArray.slice(0, 17);
-
-    // Calculate cumulative totals for cumulative visualization
-    // For asks: cumulative from best ask (lowest price) upward to current price level
-    // We calculate on the sorted array (lowest to highest) then reverse for display
-    let askCumulative = 0;
-    const asksWithCumulativeCalculated = processedAsksSlice.map((ask) => {
-      askCumulative += ask.total;
-      return { ...ask, cumulativeTotal: askCumulative };
-    });
-    // Reverse for display (highest to lowest)
-    const asksWithCumulative = asksWithCumulativeCalculated.reverse();
-
-    // For bids (displayed highest to lowest): cumulative from start (best bid) to current
-    let bidCumulative = 0;
-    const bidsWithCumulative = processedBidsSlice.map((bid) => {
-      bidCumulative += bid.total;
-      return { ...bid, cumulativeTotal: bidCumulative };
-    });
-
-    // Calculate max values for depth visualization
-    const maxBidTotal = Math.max(...processedBidsSlice.map((b) => b.total), 0);
-    const maxAskTotal = Math.max(
-      ...asksWithCumulativeCalculated.map((a) => a.total),
-      0,
-    );
-    const maxBidCumulativeTotal = Math.max(
-      ...bidsWithCumulative.map((b) => b.cumulativeTotal),
-      0,
-    );
-    const maxAskCumulativeTotal = Math.max(
-      ...asksWithCumulative.map((a) => a.cumulativeTotal),
-      0,
-    );
+    const bidsResult = processOrderBook(bids, decimal, "bid", 17);
+    const asksResult = processOrderBook(asks, decimal, "ask", 17);
 
     return {
-      processedBids: bidsWithCumulative,
-      processedAsks: asksWithCumulative,
-      maxBidTotal,
-      maxAskTotal,
-      maxBidCumulativeTotal,
-      maxAskCumulativeTotal,
+      processedBids: bidsResult.orders,
+      processedAsks: asksResult.orders,
+      maxBidTotal: bidsResult.maxTotal,
+      maxAskTotal: asksResult.maxTotal,
+      maxBidCumulativeTotal: bidsResult.maxCumulativeTotal,
+      maxAskCumulativeTotal: asksResult.maxCumulativeTotal,
     };
   }, [bids, asks, decimal]);
 

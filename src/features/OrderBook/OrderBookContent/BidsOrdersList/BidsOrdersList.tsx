@@ -1,7 +1,6 @@
 import { useMemo } from "react";
 import useOrderBookStore from "@/stores/orderBook/useOrderBookStore";
-import type { ProcessedOrder } from "@/types/orderBookTypes";
-import { groupByDecimal } from "@/utils/groupByDecimal";
+import { processOrderBook } from "@/utils/processOrderBook";
 import VirtualizedList from "@/components/VirtualizedList/VirtualizedList";
 import OrdersListRow from "../OrdersListRow/OrdersListRow";
 import TickerCurrentPrice from "../TickerCurrentPrice/TickerCurrentPrice";
@@ -12,38 +11,11 @@ const BidsOrdersList = () => {
   const bids = useOrderBookStore((s) => s.bids);
 
   const { allBids, maxTotal, maxCumulativeTotal } = useMemo(() => {
-    if (bids.length === 0) {
-      return { allBids: [], maxTotal: 0, maxCumulativeTotal: 0 };
-    }
-
-    const groupedBids = groupByDecimal(bids, decimal);
-
-    const bidsArray: ProcessedOrder[] = Array.from(groupedBids.entries())
-      .map(([price, quantity]) => ({
-        price,
-        quantity,
-        total: price * quantity,
-      }))
-      .sort((a, b) => b.price - a.price);
-
-    // Calculate cumulative totals for cumulative visualization
-    let bidCumulative = 0;
-    const bidsWithCumulative = bidsArray.map((bid) => {
-      bidCumulative += bid.total;
-      return { ...bid, cumulativeTotal: bidCumulative };
-    });
-
-    // Calculate max values for depth visualization
-    const maxTotal = Math.max(...bidsArray.map((b) => b.total), 0);
-    const maxCumulativeTotal = Math.max(
-      ...bidsWithCumulative.map((b) => b.cumulativeTotal),
-      0,
-    );
-
+    const result = processOrderBook(bids, decimal, "bid");
     return {
-      allBids: bidsWithCumulative,
-      maxTotal,
-      maxCumulativeTotal,
+      allBids: result.orders,
+      maxTotal: result.maxTotal,
+      maxCumulativeTotal: result.maxCumulativeTotal,
     };
   }, [bids, decimal]);
 

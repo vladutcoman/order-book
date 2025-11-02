@@ -1,7 +1,6 @@
 import { useMemo } from "react";
 import useOrderBookStore from "@/stores/orderBook/useOrderBookStore";
-import type { ProcessedOrder } from "@/types/orderBookTypes";
-import { groupByDecimal } from "@/utils/groupByDecimal";
+import { processOrderBook } from "@/utils/processOrderBook";
 import VirtualizedList from "@/components/VirtualizedList/VirtualizedList";
 import OrdersListRow from "../OrdersListRow/OrdersListRow";
 import TickerCurrentPrice from "../TickerCurrentPrice/TickerCurrentPrice";
@@ -12,44 +11,11 @@ const AsksOrdersList = () => {
   const asks = useOrderBookStore((s) => s.asks);
 
   const { allAsks, maxTotal, maxCumulativeTotal } = useMemo(() => {
-    if (asks.length === 0) {
-      return { allAsks: [], maxTotal: 0, maxCumulativeTotal: 0 };
-    }
-
-    const groupedAsks = groupByDecimal(asks, decimal);
-
-    const asksArray: ProcessedOrder[] = Array.from(groupedAsks.entries())
-      .map(([price, quantity]) => ({
-        price,
-        quantity,
-        total: price * quantity,
-      }))
-      .sort((a, b) => a.price - b.price); // Sort lowest to highest (best ask first)
-
-    // Calculate cumulative totals for cumulative visualization
-    // For asks: cumulative from best ask (lowest price) upward to current price level
-    let askCumulative = 0;
-    const asksWithCumulativeCalculated = asksArray.map((ask) => {
-      askCumulative += ask.total;
-      return { ...ask, cumulativeTotal: askCumulative };
-    });
-    // Reverse for display (highest to lowest)
-    const asksWithCumulative = asksWithCumulativeCalculated.reverse();
-
-    // Calculate max values for depth visualization
-    const maxTotal = Math.max(
-      ...asksWithCumulativeCalculated.map((a) => a.total),
-      0,
-    );
-    const maxCumulativeTotal = Math.max(
-      ...asksWithCumulative.map((a) => a.cumulativeTotal),
-      0,
-    );
-
+    const result = processOrderBook(asks, decimal, "ask");
     return {
-      allAsks: asksWithCumulative,
-      maxTotal,
-      maxCumulativeTotal,
+      allAsks: result.orders,
+      maxTotal: result.maxTotal,
+      maxCumulativeTotal: result.maxCumulativeTotal,
     };
   }, [asks, decimal]);
 
