@@ -3,6 +3,7 @@ import useOrderBookStore from "@/stores/orderBook/useOrderBookStore";
 import { processOrderBook } from "@/utils/processOrderBook";
 import TickerCurrentPrice from "../TickerCurrentPrice/TickerCurrentPrice";
 import OrdersListRow from "../OrdersListRow/OrdersListRow";
+import OrdersListRowSkeleton from "../OrdersListRowSkeleton/OrdersListRowSkeleton";
 import OrderListHeaders from "../OrdersListHeader/OrderListHeaders";
 
 const AllOrdersList = () => {
@@ -32,13 +33,30 @@ const AllOrdersList = () => {
     };
   }, [bids, asks, decimal]);
 
-  if (bids.length === 0 && asks.length === 0) {
-    return <div className="p-4">Loading order book...</div>;
+  const isLoading = bids.length === 0 && asks.length === 0;
+
+  if (isLoading) {
+    return (
+      <>
+        <div className="h-[430px] overflow-y-auto flex flex-col">
+          {Array.from({ length: 17 }).map((_, index) => (
+            <OrdersListRowSkeleton key={`ask-skeleton-${index}`} />
+          ))}
+        </div>
+        <TickerCurrentPrice />
+        <div className="h-[430px] flex flex-col">
+          <OrderListHeaders />
+          {Array.from({ length: 17 }).map((_, index) => (
+            <OrdersListRowSkeleton key={`bid-skeleton-${index}`} />
+          ))}
+        </div>
+      </>
+    );
   }
 
   return (
     <>
-      <div className="flex flex-col">
+      <div className="h-[430px] overflow-y-auto flex flex-col">
         {processedAsks.map((ask, index) => (
           <OrdersListRow
             key={`ask-${ask.price}-${index}`}
@@ -54,7 +72,7 @@ const AllOrdersList = () => {
 
       <TickerCurrentPrice />
 
-      <div className="flex flex-col">
+      <div className="h-[430px] flex flex-col">
         <OrderListHeaders />
         {processedBids.map((bid, index) => (
           <OrdersListRow

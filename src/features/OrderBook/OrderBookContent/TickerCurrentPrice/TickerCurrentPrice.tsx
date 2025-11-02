@@ -1,5 +1,5 @@
 import { useMemo, useRef, useEffect, useState } from "react";
-import { ArrowUp, ArrowDown } from "lucide-react";
+import { ArrowUp, ArrowDown, Loader2 } from "lucide-react";
 import useOrderBookStore from "@/stores/orderBook/useOrderBookStore";
 import useMarketStore from "@/stores/market/useMarketStore";
 import useGetTicker from "@/api/orderBook/hooks/useGetTicker";
@@ -81,8 +81,8 @@ const TickerCurrentPrice = () => {
           )}
         </div>
       ) : (
-        <div className="text-sm text-muted-foreground text-center">
-          Loading price...
+        <div className="flex items-center justify-center gap-2">
+          <Loader2 className="size-4 animate-spin text-muted-foreground" />
         </div>
       )}
     </div>

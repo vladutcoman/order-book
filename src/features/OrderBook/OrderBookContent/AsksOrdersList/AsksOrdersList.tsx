@@ -3,6 +3,7 @@ import useOrderBookStore from "@/stores/orderBook/useOrderBookStore";
 import { processOrderBook } from "@/utils/processOrderBook";
 import VirtualizedList from "@/components/VirtualizedList/VirtualizedList";
 import OrdersListRow from "../OrdersListRow/OrdersListRow";
+import OrdersListRowSkeleton from "../OrdersListRowSkeleton/OrdersListRowSkeleton";
 import TickerCurrentPrice from "../TickerCurrentPrice/TickerCurrentPrice";
 
 const AsksOrdersList = () => {
@@ -19,8 +20,19 @@ const AsksOrdersList = () => {
     };
   }, [asks, decimal]);
 
-  if (asks.length === 0) {
-    return <div className="p-4">Loading order book...</div>;
+  const isLoading = asks.length === 0;
+
+  if (isLoading) {
+    return (
+      <>
+        <div className="max-h-[600px] overflow-y-auto px-2">
+          {Array.from({ length: 20 }).map((_, index) => (
+            <OrdersListRowSkeleton key={`ask-skeleton-${index}`} />
+          ))}
+        </div>
+        <TickerCurrentPrice />
+      </>
+    );
   }
 
   return (
