@@ -62,9 +62,9 @@ export const processOrderBook = (
   const maxCumulativeTotal =
     ordersWithCumulative.length > 0
       ? ordersWithCumulative.reduce(
-        (max, order) => Math.max(max, order.cumulativeTotal),
-        0,
-      )
+          (max, order) => Math.max(max, order.cumulativeTotal),
+          0,
+        )
       : 0;
 
   return {
