@@ -2,6 +2,7 @@ import type { ProcessedOrder } from "@/types/orderBookTypes";
 import { formatNumber } from "@/utils/formatNumber";
 import { roundNumber } from "@/utils/roundNumber";
 import DepthVisualization from "../DepthVisualization/DepthVisualization";
+import { cn } from "@/lib/utils";
 
 interface OrdersListRowProps {
   order: ProcessedOrder;
@@ -10,6 +11,7 @@ interface OrdersListRowProps {
   maxTotal?: number;
   cumulativeTotal?: number;
   maxCumulativeTotal?: number;
+  isChanged?: boolean;
 }
 
 const OrdersListRow = ({
@@ -19,11 +21,24 @@ const OrdersListRow = ({
   maxTotal,
   cumulativeTotal,
   maxCumulativeTotal,
+  isChanged = false,
 }: OrdersListRowProps) => {
   const priceColor = type === "bid" ? "text-green-500" : "text-destructive";
 
+  // Animation highlight colors - matching Binance's flash effect
+  const animationClass = isChanged
+    ? type === "bid"
+      ? "animate-flash-green"
+      : "animate-flash-red"
+    : "";
+
   return (
-    <div className="grid grid-cols-3 gap-2 text-sm px-4 relative">
+    <div
+      className={cn(
+        "grid grid-cols-3 gap-2 text-sm px-4 relative transition-colors",
+        animationClass,
+      )}
+    >
       <DepthVisualization
         order={order}
         type={type}
