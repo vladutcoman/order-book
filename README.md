@@ -56,41 +56,49 @@ npm run format
 ## 🏗️ Technology Choices
 
 ### Core Framework
+
 - **React 19**
 - **TypeScript**
 - **Vite**
 
 ### State Management
+
 - **Zustand** - Lightweight state management with built-in persistence
   - Used for order book data, UI settings, and market selection
   - Persists user preferences (market, decimal precision, visualization mode) to localStorage
 
 ### Data Fetching & Caching
+
 - **@tanstack/react-query** - For the current feature it's not really mandatory, but I have included it because this is how I usually work. Efficient data fetching, caching, and synchronization.
   - Manages order book snapshots and ticker data
   - Automatic retries and background refetching
 
 ### UI Components & Styling
+
 - **Tailwind CSS 4**
 - **Radix UI**
 - **Lucide React**
 - **shadcn/ui**
 
-I have chosen this combination because it's very easy to customize our components to any style
+I have chosen this combination because it's very easy to customize our components to any style and it's pretty light, compared with other options. Also, for me it's the fastest combination when developing.
 
 ### Real-time Communication
+
 - **WebSocket API** - Native browser WebSocket for real-time order book updates
   - Connects to Binance WebSocket stream (`wss://stream.binance.com:9443/ws/`)
 
 ### Performance Optimization
+
 - **@tanstack/react-virtual** - Virtual scrolling for efficient rendering of large order lists
   - Handles thousands of orders without performance degradation
 
 ### Internationalization
+
 - **i18next & react-i18next** - Full i18n support
   - Currently supports English, easily extensible to other languages
 
 ### Additional Libraries
+
 - **tailwind-merge** - Merge Tailwind classes intelligently
 - **clsx** - Conditional className utility
 
@@ -98,7 +106,7 @@ I have chosen this combination because it's very easy to customize our component
 
 1. **Binance API Availability**: The application assumes Binance WebSocket and REST APIs are accessible and operational.
 
-2. **Browser Support**: 
+2. **Browser Support**:
    - Modern browsers with WebSocket support (all major browsers since 2011)
    - ES6+ JavaScript features
    - CSS Grid and Flexbox support
@@ -114,6 +122,7 @@ I have chosen this combination because it's very easy to customize our component
 ## ✨ Features
 
 ### Core Functionality
+
 - ✅ Real-time order book updates via WebSocket
 - ✅ Multiple market support (BTC, ETH, SOL/USDT pairs)
 - ✅ Decimal precision grouping (0.01, 0.1, 1, 10, 50, 100)
@@ -123,6 +132,7 @@ I have chosen this combination because it's very easy to customize our component
 - ✅ Settings persistence (localStorage)
 
 ### UI/UX Features
+
 - ✅ Three view modes: Both (17 bids/asks), Bids only, Asks only
 - ✅ Interactive hover highlighting (rows closest to center)
 - ✅ Price change animations (red/green flash effects)
@@ -133,10 +143,11 @@ I have chosen this combination because it's very easy to customize our component
 - ✅ Internationalization support
 
 ## 🎯 Bonus Challenges Attempted
-  - Add tabs/filter by sell/buy orders
-  - Implemented virtual scrolling for handling thousands of orders efficiently
-  - Add internationalization (i18n support)
 
+- Add tabs/filter by sell/buy orders
+- Implemented virtual scrolling for handling thousands of orders efficiently
+- Add internationalization (i18n support)
+- Add localStorage persistence
 
 ## 📁 Project Structure
 
@@ -155,17 +166,19 @@ src/
 ├── i18n/            # Internationalization
 └── lib/             # Library configurations
 ```
+
 ## 🐛 Troubleshooting
 
 ### WebSocket Connection Issues
+
 - Check browser console for connection errors
 - Verify Binance API is accessible from your network
 - Ensure WebSocket protocol is supported (not available over HTTP)
 
 ### Build Errors
+
 - Clear `node_modules` and reinstall: `rm -rf node_modules && npm install`
 - Check Node.js version: `node --version` (should be 18+)
-
 
 ## 📝 License
 
