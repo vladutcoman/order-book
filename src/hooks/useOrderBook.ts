@@ -3,7 +3,7 @@ import useGetSnapshot from "../api/orderBook/hooks/useGetSnapshot";
 import useStreamOrders from "../api/orderBook/hooks/useStreamOrders";
 import useOrderBookStore from "@/stores/orderBook/useOrderBookStore";
 
-const useGetOrderBook = (symbol: string = "btcusdt") => {
+const useOrderBook = (symbol: string = "btcusdt") => {
   const {
     data: snapshot,
     isLoading: snapshotLoading,
@@ -60,4 +60,4 @@ const useGetOrderBook = (symbol: string = "btcusdt") => {
   };
 };
 
-export default useGetOrderBook;
+export default useOrderBook;

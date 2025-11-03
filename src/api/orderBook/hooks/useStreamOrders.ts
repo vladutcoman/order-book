@@ -1,4 +1,5 @@
 import { useEffect, useRef, useCallback, useState } from "react";
+import { toast } from "sonner";
 import type { DepthUpdate } from "../types";
 import useOrderBookStore from "@/stores/orderBook/useOrderBookStore";
 
@@ -43,15 +44,15 @@ const useStreamOrders = () => {
         applyUpdate(data);
       };
 
-      ws.onclose = (event) => {
-        console.log("WebSocket closed:", event.code, event.reason);
-        setIsConnected(false);
-      };
-
       ws.onerror = (error) => {
         console.error("WebSocket error:", error);
-        setError("WebSocket connection error");
+        const errorMessage = "Failed to connect to order book stream";
+        setError(errorMessage);
         setIsConnected(false);
+        toast.error("WebSocket connection error", {
+          description:
+            "Could not establish connection to Binance WebSocket. Please try again.",
+        });
       };
     },
     [applyUpdate],

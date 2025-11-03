@@ -1,5 +1,6 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ThemeProvider } from "@/components/ThemeProvider/ThemeProvider";
+import { Toaster } from "@/components/ui/sonner";
 import i18n from "@/i18n/i18n";
 import { I18nextProvider } from "react-i18next";
 
@@ -17,7 +18,10 @@ const Providers = ({ children }: { children: React.ReactNode }) => {
   return (
     <QueryClientProvider client={queryClient}>
       <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
-        <I18nextProvider i18n={i18n}>{children}</I18nextProvider>
+        <I18nextProvider i18n={i18n}>
+          {children}
+          <Toaster />
+        </I18nextProvider>
       </ThemeProvider>
     </QueryClientProvider>
   );

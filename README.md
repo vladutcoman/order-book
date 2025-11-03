@@ -173,8 +173,7 @@ src/
 
 ### Error Handling & Resilience
 
-- Better error handling for WebSocket disconnections
-- User-friendly error messages and retry mechanisms
+- User-friendly error messages
 
 ### Configuration & Environment
 
