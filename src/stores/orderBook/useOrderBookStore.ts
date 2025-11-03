@@ -2,6 +2,7 @@ import type {
   OrderBookDecimal,
   OrderBookDepthVisualization,
   OrderBookTab,
+  ChangedPrices,
 } from "@/types/orderBookTypes";
 import type { DepthUpdate } from "@/api/orderBook/types";
 import { create } from "zustand";
@@ -19,7 +20,7 @@ interface OrderBookStore {
   bids: [string, string][]; // [price, quantity]
   asks: [string, string][]; // [price, quantity]
   lastUpdateId: number;
-  changedPrices: Map<string, number>; // Track prices that changed (grouped by decimal) with timestamp
+  changedPrices: ChangedPrices; // Track prices that changed (grouped by decimal) with timestamp
 
   setTab: (tab: OrderBookTab) => void;
   setDecimal: (decimal: OrderBookDecimal) => void;
@@ -54,7 +55,7 @@ const useOrderBookStore = create<OrderBookStore>()(
       bids: [],
       asks: [],
       lastUpdateId: 0,
-      changedPrices: new Map<string, number>(),
+      changedPrices: {},
 
       setTab: (tab) => set({ tab }),
       setDecimal: (decimal) => set({ decimal }),
@@ -85,7 +86,7 @@ const useOrderBookStore = create<OrderBookStore>()(
 
         const bidsMap = new Map(state.bids.map(([p, q]) => [p, q]));
         const asksMap = new Map(state.asks.map(([p, q]) => [p, q]));
-        const newChangedPrices = new Map(state.changedPrices);
+        const newChangedPrices: ChangedPrices = { ...state.changedPrices };
         const now = Date.now();
 
         // Helper to group price by decimal step
@@ -101,13 +102,13 @@ const useOrderBookStore = create<OrderBookStore>()(
           const groupedPrice = groupPrice(price);
           if (parseFloat(quantity) === 0) {
             bidsMap.delete(price);
-            newChangedPrices.set(groupedPrice, now);
+            newChangedPrices[groupedPrice] = now;
           } else {
             const oldQuantity = bidsMap.get(price);
             bidsMap.set(price, quantity);
             // Only mark as changed if quantity actually changed
             if (oldQuantity !== quantity) {
-              newChangedPrices.set(groupedPrice, now);
+              newChangedPrices[groupedPrice] = now;
             }
           }
         }
@@ -117,13 +118,13 @@ const useOrderBookStore = create<OrderBookStore>()(
           const groupedPrice = groupPrice(price);
           if (parseFloat(quantity) === 0) {
             asksMap.delete(price);
-            newChangedPrices.set(groupedPrice, now);
+            newChangedPrices[groupedPrice] = now;
           } else {
             const oldQuantity = asksMap.get(price);
             asksMap.set(price, quantity);
             // Only mark as changed if quantity actually changed
             if (oldQuantity !== quantity) {
-              newChangedPrices.set(groupedPrice, now);
+              newChangedPrices[groupedPrice] = now;
             }
           }
         }
@@ -144,22 +145,25 @@ const useOrderBookStore = create<OrderBookStore>()(
         });
       },
 
-      clearChangedPrices: () =>
-        set({ changedPrices: new Map<string, number>() }),
+      clearChangedPrices: () => set({ changedPrices: {} }),
 
       cleanupExpiredChangedPrices: (animationDuration) => {
         const state = get();
         const now = Date.now();
-        const cleaned = new Map<string, number>();
+        const cleaned: ChangedPrices = {};
 
         // Keep only entries that are still within animation duration
-        for (const [price, timestamp] of state.changedPrices.entries()) {
+        for (const [price, timestamp] of Object.entries(state.changedPrices)) {
           if (now - timestamp < animationDuration) {
-            cleaned.set(price, timestamp);
+            cleaned[price] = timestamp;
           }
         }
 
-        if (cleaned.size !== state.changedPrices.size) {
+        // Only update if something was removed
+        if (
+          Object.keys(cleaned).length !==
+          Object.keys(state.changedPrices).length
+        ) {
           set({ changedPrices: cleaned });
         }
       },
@@ -169,7 +173,7 @@ const useOrderBookStore = create<OrderBookStore>()(
           bids: [],
           asks: [],
           lastUpdateId: 0,
-          changedPrices: new Map<string, number>(),
+          changedPrices: {},
         }),
     }),
     {
@@ -182,6 +186,7 @@ const useOrderBookStore = create<OrderBookStore>()(
         showBuySellRatio: state.showBuySellRatio,
         animationsEnabled: state.animationsEnabled,
         rounding: state.rounding,
+        // changedPrices is now an object, so it persists naturally
       }),
     },
   ),

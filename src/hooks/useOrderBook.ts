@@ -35,7 +35,6 @@ const useOrderBook = (symbol: string = "btcusdt") => {
 
   useEffect(() => {
     if (snapshot && !isConnected) {
-      console.log("Snapshot loaded, connecting to WebSocket...");
       connect(symbol);
     }
   }, [snapshot, isConnected, connect, symbol]);

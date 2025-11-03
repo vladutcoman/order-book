@@ -83,7 +83,6 @@ const HeaderTopSection = () => {
               value={depthVisualization}
               onValueChange={(value) => {
                 setDepthVisualization(value as OrderBookDepthVisualization);
-                console.log("Depth visualization:", value);
               }}
             >
               <DropdownMenuRadioItem
@@ -104,10 +103,7 @@ const HeaderTopSection = () => {
 
             <DropdownMenuCheckboxItem
               checked={animationsEnabled}
-              onCheckedChange={(checked) => {
-                setAnimationsEnabled(checked);
-                console.log("Animations:", checked);
-              }}
+              onCheckedChange={setAnimationsEnabled}
               className="py-1.5 text-white"
             >
               {t("orderBook.enableAnimations")}

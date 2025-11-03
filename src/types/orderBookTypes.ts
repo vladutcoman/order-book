@@ -23,3 +23,8 @@ export interface ProcessedOrderBookResult {
   maxTotal: number;
   maxCumulativeTotal: number;
 }
+/**
+ * Changed prices tracking - maps price (as string) to timestamp (as number)
+ * Used to track which prices changed for animation highlighting
+ */
+export type ChangedPrices = Record<string, number>;
