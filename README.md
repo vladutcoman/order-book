@@ -169,6 +169,29 @@ src/
 └── lib/             # Library configurations
 ```
 
+## 🚧 Next Steps / Future Improvements
+
+### Error Handling & Resilience
+
+- Better error handling for WebSocket disconnections
+- User-friendly error messages and retry mechanisms
+
+### Configuration & Environment
+
+- Use environment variables for Binance API endpoints
+- Feature flags for experimental features
+
+### Testing & Quality
+
+- Unit tests for utility functions and hooks
+- E2E tests for critical user flows
+- Visual regression testing
+
+### Documentation
+
+- API documentation
+- Component Storybook
+
 ## 🐛 Troubleshooting
 
 ### WebSocket Connection Issues
