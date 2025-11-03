@@ -1,9 +1,9 @@
-import { useMemo, useRef, useEffect, useState } from "react";
+import { useRef, useEffect, useState } from "react";
 import { ArrowUp, ArrowDown, Loader2 } from "lucide-react";
-import useOrderBookStore from "@/stores/orderBook/useOrderBookStore";
 import useMarketStore from "@/stores/market/useMarketStore";
 import useGetTicker from "@/api/orderBook/hooks/useGetTicker";
 import { formatNumber } from "@/utils/formatNumber";
+import useCurrentPrice from "@/hooks/useCurrentPrice";
 
 const TickerCurrentPrice = () => {
   const previousPriceRef = useRef<number | null>(null);
@@ -12,29 +12,8 @@ const TickerCurrentPrice = () => {
   );
 
   const market = useMarketStore((state) => state.market);
-
-  const firstBid = useOrderBookStore((state) =>
-    state.bids.length > 0 ? state.bids[0] : null,
-  );
-  const firstAsk = useOrderBookStore((state) =>
-    state.asks.length > 0 ? state.asks[0] : null,
-  );
-
+  const currentPrice = useCurrentPrice();
   const { data: ticker } = useGetTicker(market);
-
-  const currentPrice = useMemo(() => {
-    if (ticker?.lastPrice) {
-      return parseFloat(ticker.lastPrice);
-    }
-
-    if (firstBid && firstAsk) {
-      const bestBid = parseFloat(firstBid[0]);
-      const bestAsk = parseFloat(firstAsk[0]);
-      return (bestBid + bestAsk) / 2;
-    }
-
-    return null;
-  }, [ticker?.lastPrice, firstBid, firstAsk]);
 
   useEffect(() => {
     if (currentPrice !== null) {
