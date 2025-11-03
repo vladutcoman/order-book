@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import {
   Select,
   SelectContent,
@@ -14,14 +15,15 @@ const MARKETS = [
 ];
 
 const MarketSelector = () => {
+  const { t } = useTranslation();
   const market = useMarketStore((s) => s.market);
   const setMarket = useMarketStore((s) => s.setMarket);
 
   return (
     <div className="flex flex-col gap-2 items-center">
       <Select value={market} onValueChange={setMarket}>
-        <SelectTrigger aria-label="Select market">
-          <SelectValue placeholder="Select market" />
+        <SelectTrigger aria-label={t("marketSelector.selectMarket")}>
+          <SelectValue placeholder={t("marketSelector.selectMarket")} />
         </SelectTrigger>
         <SelectContent>
           {MARKETS.map((m) => (
@@ -31,7 +33,9 @@ const MarketSelector = () => {
           ))}
         </SelectContent>
       </Select>
-      <p className="text-sm text-muted-foreground">Market: {market}</p>
+      <p className="text-sm text-muted-foreground">
+        {t("marketSelector.market")}: {market}
+      </p>
     </div>
   );
 };

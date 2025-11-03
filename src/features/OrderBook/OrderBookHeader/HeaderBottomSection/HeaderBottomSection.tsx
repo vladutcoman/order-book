@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import {
   Select,
   SelectContent,
@@ -20,6 +21,7 @@ const DECIMAL_OPTIONS: { label: string; value: OrderBookDecimal }[] = [
 ];
 
 const HeaderBottomSection = () => {
+  const { t } = useTranslation();
   const decimal = useOrderBookStore((s) => s.decimal);
   const setDecimal = useOrderBookStore((s) => s.setDecimal);
 
@@ -46,9 +48,12 @@ const HeaderBottomSection = () => {
             "data-[state=open]:border-none! data-[state=open]:outline-none!",
             "text-[12px]!",
           )}
-          aria-label="Select decimal precision"
+          aria-label={t("headerBottomSection.selectDecimalPrecision")}
         >
-          <SelectValue className="text-[12px]" placeholder="Select decimal" />
+          <SelectValue
+            className="text-[12px]"
+            placeholder={t("headerBottomSection.selectDecimal")}
+          />
         </SelectTrigger>
         <SelectContent>
           {DECIMAL_OPTIONS.map((option) => (

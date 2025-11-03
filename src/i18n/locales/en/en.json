@@ -1,3 +1,33 @@
 {
-  "hello": "Hello"
+  "app": {
+    "welcome": "Welcome to Vladut's Order Book"
+  },
+  "orderBook": {
+    "title": "Order Book",
+    "orderBookDisplay": "Order Book Display",
+    "showBuySellRatio": "Show Buy/Sell Ratio",
+    "rounding": "Rounding",
+    "bookDepthVisualization": "Book Depth Visualization",
+    "amount": "Amount",
+    "cumulative": "Cumulative",
+    "enableAnimations": "Enable Animations",
+    "openSettings": "Open order book settings"
+  },
+  "orderList": {
+    "price": "Price (USDT)",
+    "amount": "Amount",
+    "total": "Total"
+  },
+  "orderBookFooter": {
+    "buy": "B",
+    "sell": "S"
+  },
+  "marketSelector": {
+    "selectMarket": "Select market",
+    "market": "Market"
+  },
+  "headerBottomSection": {
+    "selectDecimalPrecision": "Select decimal precision",
+    "selectDecimal": "Select decimal"
+  }
 }

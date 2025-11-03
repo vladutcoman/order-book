@@ -15,6 +15,9 @@ interface OrdersListRowProps {
   cumulativeTotal?: number;
   maxCumulativeTotal?: number;
   isChanged?: boolean;
+  isHighlighted?: boolean;
+  onMouseEnter?: () => void;
+  onMouseLeave?: () => void;
 }
 
 const OrdersListRow = memo(
@@ -26,11 +29,13 @@ const OrdersListRow = memo(
     cumulativeTotal,
     maxCumulativeTotal,
     isChanged = false,
+    isHighlighted = false,
+    onMouseEnter,
+    onMouseLeave,
   }: OrdersListRowProps) => {
     const decimal = useOrderBookStore((state) => state.decimal);
     const priceColor = type === "bid" ? "text-green-500" : "text-destructive";
 
-    // Animation highlight colors - matching Binance's flash effect
     const animationClass = isChanged
       ? type === "bid"
         ? "animate-flash-green"
@@ -40,9 +45,12 @@ const OrdersListRow = memo(
     return (
       <div
         className={cn(
-          "grid grid-cols-3 gap-2 text-sm px-4 relative transition-colors",
+          "grid grid-cols-3 gap-2 text-sm mx-4 relative transition-colors cursor-pointer",
           animationClass,
+          isHighlighted && "bg-gray-500/10",
         )}
+        onMouseEnter={onMouseEnter}
+        onMouseLeave={onMouseLeave}
       >
         <DepthVisualization
           order={order}

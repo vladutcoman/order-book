@@ -1,8 +1,10 @@
 import { useMemo } from "react";
+import { useTranslation } from "react-i18next";
 import useOrderBookStore from "@/stores/orderBook/useOrderBookStore";
 import { groupByDecimal } from "@/utils/groupByDecimal";
 
 const OrderBookFooter = () => {
+  const { t } = useTranslation();
   const bids = useOrderBookStore((s) => s.bids);
   const asks = useOrderBookStore((s) => s.asks);
   const decimal = useOrderBookStore((s) => s.decimal);
@@ -54,8 +56,12 @@ const OrderBookFooter = () => {
 
   return (
     <div className="flex items-center justify-between px-2 py-2 text-sm border-t">
-      <span className="text-green-500">B {ratio.buy.toFixed(2)}%</span>
-      <span className="text-destructive">{ratio.sell.toFixed(2)}% S</span>
+      <span className="text-green-500">
+        {t("orderBookFooter.buy")} {ratio.buy.toFixed(2)}%
+      </span>
+      <span className="text-destructive">
+        {ratio.sell.toFixed(2)}% {t("orderBookFooter.sell")}
+      </span>
     </div>
   );
 };
