@@ -1,6 +1,7 @@
-import type { Market } from "@/types/marketTypes";
-import { create } from "zustand";
-import { persist } from "zustand/middleware";
+import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
+
+import type { Market } from '@/types/marketTypes';
 
 interface MarketStore {
   market: Market;
@@ -10,11 +11,11 @@ interface MarketStore {
 const useMarketStore = create<MarketStore>()(
   persist(
     (set) => ({
-      market: "btcusdt",
+      market: 'btcusdt',
       setMarket: (market) => set({ market }),
     }),
     {
-      name: "market-storage",
+      name: 'market-storage',
       partialize: (state) => ({ market: state.market }),
     },
   ),

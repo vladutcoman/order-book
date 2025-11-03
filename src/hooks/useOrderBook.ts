@@ -1,9 +1,11 @@
-import { useEffect } from "react";
-import useGetSnapshot from "../api/orderBook/hooks/useGetSnapshot";
-import useStreamOrders from "../api/orderBook/hooks/useStreamOrders";
-import useOrderBookStore from "@/stores/orderBook/useOrderBookStore";
+import { useEffect } from 'react';
 
-const useGetOrderBook = (symbol: string = "btcusdt") => {
+import useOrderBookStore from '@/stores/orderBook/useOrderBookStore';
+
+import useGetSnapshot from '../api/orderBook/hooks/useGetSnapshot';
+import useStreamOrders from '../api/orderBook/hooks/useStreamOrders';
+
+const useOrderBook = (symbol: string = 'btcusdt') => {
   const {
     data: snapshot,
     isLoading: snapshotLoading,
@@ -14,12 +16,7 @@ const useGetOrderBook = (symbol: string = "btcusdt") => {
   const setBidsAndAsks = useOrderBookStore((s) => s.setBidsAndAsks);
   const reset = useOrderBookStore((s) => s.reset);
 
-  const {
-    connect,
-    disconnect,
-    isConnected,
-    error: streamError,
-  } = useStreamOrders();
+  const { connect, disconnect, isConnected, error: streamError } = useStreamOrders();
 
   useEffect(() => {
     if (snapshot) {
@@ -35,7 +32,6 @@ const useGetOrderBook = (symbol: string = "btcusdt") => {
 
   useEffect(() => {
     if (snapshot && !isConnected) {
-      console.log("Snapshot loaded, connecting to WebSocket...");
       connect(symbol);
     }
   }, [snapshot, isConnected, connect, symbol]);
@@ -60,4 +56,4 @@ const useGetOrderBook = (symbol: string = "btcusdt") => {
   };
 };
 
-export default useGetOrderBook;
+export default useOrderBook;

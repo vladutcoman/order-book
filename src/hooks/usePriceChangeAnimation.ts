@@ -1,17 +1,16 @@
-import { useMemo, useRef, useEffect } from "react";
+import { useEffect, useMemo, useRef } from 'react';
+
+import type { ChangedPrices } from '@/types/orderBookTypes';
 
 const ANIMATION_DURATION = 800;
 
 /**
  * Custom hook to check if a price was recently changed for animation highlighting
- * @param changedPrices - Map of changed prices with timestamps
+ * @param changedPrices - Object mapping price strings to timestamps
  * @param animationsEnabled - Whether animations are enabled
  * @returns Function that checks if a price was recently changed
  */
-const usePriceChangeAnimation = (
-  changedPrices: Map<string, number>,
-  animationsEnabled: boolean,
-) => {
+const usePriceChangeAnimation = (changedPrices: ChangedPrices, animationsEnabled: boolean) => {
   // Use ref to track current time for animation checks (updates only when changedPrices changes)
   const timeRef = useRef(Date.now());
   useEffect(() => {
@@ -24,9 +23,9 @@ const usePriceChangeAnimation = (
     }
 
     return (price: string) => {
-      const timestamp = changedPrices.get(price);
+      const timestamp = changedPrices[price];
 
-      if (!timestamp) {
+      if (timestamp === undefined) {
         return false;
       }
 

@@ -1,30 +1,31 @@
-import { useMemo, useState } from "react";
-import { useShallow } from "zustand/react/shallow";
-import useOrderBookStore from "@/stores/orderBook/useOrderBookStore";
-import { processOrderBook } from "@/utils/processOrderBook";
-import VirtualizedList from "@/components/VirtualizedList/VirtualizedList";
-import OrdersListRow from "../OrdersListRow/OrdersListRow";
-import OrdersListRowSkeleton from "../OrdersListRowSkeleton/OrdersListRowSkeleton";
-import TickerCurrentPrice from "../TickerCurrentPrice/TickerCurrentPrice";
-import useOrderHighlight from "@/hooks/useOrderHighlight";
-import usePriceChangeAnimation from "@/hooks/usePriceChangeAnimation";
+import { useMemo, useState } from 'react';
+import { useShallow } from 'zustand/react/shallow';
+
+import VirtualizedList from '@/components/VirtualizedList/VirtualizedList';
+import useOrderHighlight from '@/hooks/useOrderHighlight';
+import usePriceChangeAnimation from '@/hooks/usePriceChangeAnimation';
+import useOrderBookStore from '@/stores/orderBook/useOrderBookStore';
+import { processOrderBook } from '@/utils/processOrderBook';
+
+import OrdersListRow from '../OrdersListRow/OrdersListRow';
+import OrdersListRowSkeleton from '../OrdersListRowSkeleton/OrdersListRowSkeleton';
+import TickerCurrentPrice from '../TickerCurrentPrice/TickerCurrentPrice';
 
 const AsksOrdersList = () => {
   const [hoveredPrice, setHoveredPrice] = useState<number | null>(null);
 
-  const { decimal, rounding, asks, changedPrices, animationsEnabled } =
-    useOrderBookStore(
-      useShallow((s) => ({
-        decimal: s.decimal,
-        rounding: s.rounding,
-        asks: s.asks,
-        changedPrices: s.changedPrices,
-        animationsEnabled: s.animationsEnabled,
-      })),
-    );
+  const { decimal, rounding, asks, changedPrices, animationsEnabled } = useOrderBookStore(
+    useShallow((s) => ({
+      decimal: s.decimal,
+      rounding: s.rounding,
+      asks: s.asks,
+      changedPrices: s.changedPrices,
+      animationsEnabled: s.animationsEnabled,
+    })),
+  );
 
   const { allAsks, maxTotal, maxCumulativeTotal } = useMemo(() => {
-    const result = processOrderBook(asks, decimal, "ask");
+    const result = processOrderBook(asks, decimal, 'ask');
     return {
       allAsks: result.orders,
       maxTotal: result.maxTotal,
@@ -32,11 +33,8 @@ const AsksOrdersList = () => {
     };
   }, [asks, decimal]);
 
-  const highlightedPrices = useOrderHighlight(allAsks, hoveredPrice, "ask");
-  const isPriceRecentlyChanged = usePriceChangeAnimation(
-    changedPrices,
-    animationsEnabled,
-  );
+  const highlightedPrices = useOrderHighlight(allAsks, hoveredPrice, 'ask');
+  const isPriceRecentlyChanged = usePriceChangeAnimation(changedPrices, animationsEnabled);
 
   const isLoading = asks.length === 0;
 
@@ -54,13 +52,8 @@ const AsksOrdersList = () => {
   }
 
   return (
-    <>
-      <VirtualizedList
-        items={allAsks}
-        estimateSize={24}
-        maxHeight="600px"
-        className="px-0"
-      >
+    <div className="flex h-[600px] flex-col gap-2">
+      <VirtualizedList items={allAsks} estimateSize={24} maxHeight="600px" className="px-0">
         {(ask) => (
           <OrdersListRow
             order={ask}
@@ -77,7 +70,7 @@ const AsksOrdersList = () => {
         )}
       </VirtualizedList>
       <TickerCurrentPrice />
-    </>
+    </div>
   );
 };
 

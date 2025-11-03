@@ -11,7 +11,9 @@
     "amount": "Amount",
     "cumulative": "Cumulative",
     "enableAnimations": "Enable Animations",
-    "openSettings": "Open order book settings"
+    "openSettings": "Open order book settings",
+    "snapshotError": "Could not load order book snapshot",
+    "retry": "Retry"
   },
   "orderList": {
     "price": "Price (USDT)",

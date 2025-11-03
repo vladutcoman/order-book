@@ -1,1 +1,1 @@
-export type Market = "btcusdt" | "ethusdt" | "solusdt";
+export type Market = 'btcusdt' | 'ethusdt' | 'solusdt';

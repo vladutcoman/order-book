@@ -1,18 +1,18 @@
-import { useTranslation } from "react-i18next";
+import { useTranslation } from 'react-i18next';
 
 const OrderListHeaders = () => {
   const { t } = useTranslation();
 
   return (
-    <div className="grid px-4 grid-cols-3 gap-2 text-sm text-muted-foreground pb-1">
-      <div className="text-left text-[12px] font-normal line-height-[18px]">
-        {t("orderList.price")}
+    <div className="text-muted-foreground grid grid-cols-3 gap-2 px-4 pb-1 text-sm">
+      <div className="line-height-[18px] text-left text-[12px] font-normal">
+        {t('orderList.price')}
       </div>
-      <div className="text-right text-[12px] font-normal line-height-[18px]">
-        {t("orderList.amount")}
+      <div className="line-height-[18px] text-right text-[12px] font-normal">
+        {t('orderList.amount')}
       </div>
-      <div className="text-right text-[12px] font-normal line-height-[18px]">
-        {t("orderList.total")}
+      <div className="line-height-[18px] text-right text-[12px] font-normal">
+        {t('orderList.total')}
       </div>
     </div>
   );

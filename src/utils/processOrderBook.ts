@@ -1,8 +1,6 @@
-import type {
-  OrderBookDecimal,
-  ProcessedOrderBookResult,
-} from "@/types/orderBookTypes";
-import { groupByDecimal } from "./groupByDecimal";
+import type { OrderBookDecimal, ProcessedOrderBookResult } from '@/types/orderBookTypes';
+
+import { groupByDecimal } from './groupByDecimal';
 
 /**
  * Processes raw order book data into a format ready for display
@@ -15,7 +13,7 @@ import { groupByDecimal } from "./groupByDecimal";
 export const processOrderBook = (
   rawOrders: [string, string][],
   decimal: OrderBookDecimal,
-  type: "bid" | "ask",
+  type: 'bid' | 'ask',
   limit?: number,
 ): ProcessedOrderBookResult => {
   if (rawOrders.length === 0) {
@@ -36,7 +34,7 @@ export const processOrderBook = (
       quantity,
       total: price * quantity,
     }))
-    .sort((a, b) => (type === "bid" ? b.price - a.price : a.price - b.price));
+    .sort((a, b) => (type === 'bid' ? b.price - a.price : a.price - b.price));
 
   // Apply limit if specified
   const limitedOrders = limit ? ordersArray.slice(0, limit) : ordersArray;
@@ -51,8 +49,7 @@ export const processOrderBook = (
   });
 
   // For asks, reverse after calculating cumulative (for display: highest to lowest)
-  const finalOrders =
-    type === "ask" ? ordersWithCumulative.reverse() : ordersWithCumulative;
+  const finalOrders = type === 'ask' ? ordersWithCumulative.reverse() : ordersWithCumulative;
 
   // Calculate max values (using reduce instead of spread to avoid potential stack overflow)
   const maxTotal =
@@ -61,10 +58,7 @@ export const processOrderBook = (
       : 0;
   const maxCumulativeTotal =
     ordersWithCumulative.length > 0
-      ? ordersWithCumulative.reduce(
-          (max, order) => Math.max(max, order.cumulativeTotal),
-          0,
-        )
+      ? ordersWithCumulative.reduce((max, order) => Math.max(max, order.cumulativeTotal), 0)
       : 0;
 
   return {

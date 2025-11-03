@@ -1,11 +1,13 @@
+import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
+
+import type { DepthUpdate } from '@/api/orderBook/types';
 import type {
+  ChangedPrices,
   OrderBookDecimal,
   OrderBookDepthVisualization,
   OrderBookTab,
-} from "@/types/orderBookTypes";
-import type { DepthUpdate } from "@/api/orderBook/types";
-import { create } from "zustand";
-import { persist } from "zustand/middleware";
+} from '@/types/orderBookTypes';
 
 interface OrderBookStore {
   tab: OrderBookTab;
@@ -19,13 +21,11 @@ interface OrderBookStore {
   bids: [string, string][]; // [price, quantity]
   asks: [string, string][]; // [price, quantity]
   lastUpdateId: number;
-  changedPrices: Map<string, number>; // Track prices that changed (grouped by decimal) with timestamp
+  changedPrices: ChangedPrices; // Track prices that changed (grouped by decimal) with timestamp
 
   setTab: (tab: OrderBookTab) => void;
   setDecimal: (decimal: OrderBookDecimal) => void;
-  setDepthVisualization: (
-    depthVisualization: OrderBookDepthVisualization,
-  ) => void;
+  setDepthVisualization: (depthVisualization: OrderBookDepthVisualization) => void;
   setDisplayAvgSum: (displayAvgSum: boolean) => void;
   setShowBuySellRatio: (showBuySellRatio: boolean) => void;
   setAnimationsEnabled: (animationsEnabled: boolean) => void;
@@ -44,9 +44,9 @@ interface OrderBookStore {
 const useOrderBookStore = create<OrderBookStore>()(
   persist(
     (set, get) => ({
-      tab: "both",
+      tab: 'both',
       decimal: 0.01,
-      depthVisualization: "amount",
+      depthVisualization: 'amount',
       displayAvgSum: false,
       showBuySellRatio: false,
       animationsEnabled: true,
@@ -54,12 +54,11 @@ const useOrderBookStore = create<OrderBookStore>()(
       bids: [],
       asks: [],
       lastUpdateId: 0,
-      changedPrices: new Map<string, number>(),
+      changedPrices: {},
 
       setTab: (tab) => set({ tab }),
       setDecimal: (decimal) => set({ decimal }),
-      setDepthVisualization: (depthVisualization) =>
-        set({ depthVisualization }),
+      setDepthVisualization: (depthVisualization) => set({ depthVisualization }),
       setDisplayAvgSum: (displayAvgSum) => set({ displayAvgSum }),
       setShowBuySellRatio: (showBuySellRatio) => set({ showBuySellRatio }),
       setAnimationsEnabled: (animationsEnabled) => {
@@ -71,8 +70,7 @@ const useOrderBookStore = create<OrderBookStore>()(
       },
       setRounding: (rounding) => set({ rounding }),
 
-      setBidsAndAsks: (bids, asks, lastUpdateId) =>
-        set({ bids, asks, lastUpdateId }),
+      setBidsAndAsks: (bids, asks, lastUpdateId) => set({ bids, asks, lastUpdateId }),
 
       // Apply WebSocket update
       applyUpdate: (update) => {
@@ -85,7 +83,7 @@ const useOrderBookStore = create<OrderBookStore>()(
 
         const bidsMap = new Map(state.bids.map(([p, q]) => [p, q]));
         const asksMap = new Map(state.asks.map(([p, q]) => [p, q]));
-        const newChangedPrices = new Map(state.changedPrices);
+        const newChangedPrices: ChangedPrices = { ...state.changedPrices };
         const now = Date.now();
 
         // Helper to group price by decimal step
@@ -101,13 +99,13 @@ const useOrderBookStore = create<OrderBookStore>()(
           const groupedPrice = groupPrice(price);
           if (parseFloat(quantity) === 0) {
             bidsMap.delete(price);
-            newChangedPrices.set(groupedPrice, now);
+            newChangedPrices[groupedPrice] = now;
           } else {
             const oldQuantity = bidsMap.get(price);
             bidsMap.set(price, quantity);
             // Only mark as changed if quantity actually changed
             if (oldQuantity !== quantity) {
-              newChangedPrices.set(groupedPrice, now);
+              newChangedPrices[groupedPrice] = now;
             }
           }
         }
@@ -117,13 +115,13 @@ const useOrderBookStore = create<OrderBookStore>()(
           const groupedPrice = groupPrice(price);
           if (parseFloat(quantity) === 0) {
             asksMap.delete(price);
-            newChangedPrices.set(groupedPrice, now);
+            newChangedPrices[groupedPrice] = now;
           } else {
             const oldQuantity = asksMap.get(price);
             asksMap.set(price, quantity);
             // Only mark as changed if quantity actually changed
             if (oldQuantity !== quantity) {
-              newChangedPrices.set(groupedPrice, now);
+              newChangedPrices[groupedPrice] = now;
             }
           }
         }
@@ -144,22 +142,22 @@ const useOrderBookStore = create<OrderBookStore>()(
         });
       },
 
-      clearChangedPrices: () =>
-        set({ changedPrices: new Map<string, number>() }),
+      clearChangedPrices: () => set({ changedPrices: {} }),
 
       cleanupExpiredChangedPrices: (animationDuration) => {
         const state = get();
         const now = Date.now();
-        const cleaned = new Map<string, number>();
+        const cleaned: ChangedPrices = {};
 
         // Keep only entries that are still within animation duration
-        for (const [price, timestamp] of state.changedPrices.entries()) {
+        for (const [price, timestamp] of Object.entries(state.changedPrices)) {
           if (now - timestamp < animationDuration) {
-            cleaned.set(price, timestamp);
+            cleaned[price] = timestamp;
           }
         }
 
-        if (cleaned.size !== state.changedPrices.size) {
+        // Only update if something was removed
+        if (Object.keys(cleaned).length !== Object.keys(state.changedPrices).length) {
           set({ changedPrices: cleaned });
         }
       },
@@ -169,11 +167,11 @@ const useOrderBookStore = create<OrderBookStore>()(
           bids: [],
           asks: [],
           lastUpdateId: 0,
-          changedPrices: new Map<string, number>(),
+          changedPrices: {},
         }),
     }),
     {
-      name: "order-book-storage",
+      name: 'order-book-storage',
       partialize: (state) => ({
         tab: state.tab,
         decimal: state.decimal,

@@ -1,6 +1,9 @@
-import { useEffect, useRef, useCallback, useState } from "react";
-import type { DepthUpdate } from "../types";
-import useOrderBookStore from "@/stores/orderBook/useOrderBookStore";
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { toast } from 'sonner';
+
+import useOrderBookStore from '@/stores/orderBook/useOrderBookStore';
+
+import type { DepthUpdate } from '../types';
 
 const useStreamOrders = () => {
   const [error, setError] = useState<string | null>(null);
@@ -10,13 +13,14 @@ const useStreamOrders = () => {
   const applyUpdate = useOrderBookStore((s) => s.applyUpdate);
 
   const connect = useCallback(
-    (symbol: string = "btcusdt") => {
+    (symbol: string = 'btcusdt') => {
       // Check if already connected or connecting
       if (
         wsRef.current?.readyState === WebSocket.OPEN ||
         wsRef.current?.readyState === WebSocket.CONNECTING
       ) {
-        console.log("WebSocket already connected or connecting, skipping...");
+        console.log('WebSocket already connected or connecting, skipping...');
+
         return;
       }
 
@@ -27,31 +31,45 @@ const useStreamOrders = () => {
       }
 
       const wsUrl = `wss://stream.binance.com:9443/ws/${symbol}@depth@1000ms`;
-      console.log("Connecting to WebSocket:", wsUrl);
+
+      console.log('Connecting to WebSocket:', wsUrl);
 
       const ws = new WebSocket(wsUrl);
       wsRef.current = ws;
 
       ws.onopen = () => {
-        console.log("WebSocket connected for", symbol);
+        console.log('WebSocket connected for', symbol);
+
         setIsConnected(true);
         setError(null);
       };
 
       ws.onmessage = (event) => {
-        const data: DepthUpdate = JSON.parse(event.data);
-        applyUpdate(data);
+        try {
+          const data: DepthUpdate = JSON.parse(event.data);
+          applyUpdate(data);
+        } catch (parseError) {
+          console.error('Failed to parse WebSocket message:', parseError);
+
+          toast.error('Data parsing error', {
+            description: 'Received invalid order book data. Please refresh.',
+          });
+        }
       };
 
-      ws.onclose = (event) => {
-        console.log("WebSocket closed:", event.code, event.reason);
+      ws.onclose = () => {
         setIsConnected(false);
       };
 
       ws.onerror = (error) => {
-        console.error("WebSocket error:", error);
-        setError("WebSocket connection error");
+        console.error('WebSocket error:', error);
+
+        const errorMessage = 'Failed to connect to order book stream';
+        setError(errorMessage);
         setIsConnected(false);
+        toast.error('WebSocket connection error', {
+          description: 'Could not establish connection to Binance WebSocket. Please try again.',
+        });
       };
     },
     [applyUpdate],

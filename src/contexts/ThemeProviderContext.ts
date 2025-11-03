@@ -1,10 +1,10 @@
-import type { ThemeProviderState } from "@/types/themeTypes";
-import { createContext } from "react";
+import { createContext } from 'react';
+
+import type { ThemeProviderState } from '@/types/themeTypes';
 
 const initialState: ThemeProviderState = {
-  theme: "system",
+  theme: 'system',
   setTheme: () => null,
 };
 
-export const ThemeProviderContext =
-  createContext<ThemeProviderState>(initialState);
+export const ThemeProviderContext = createContext<ThemeProviderState>(initialState);

@@ -1,29 +1,30 @@
-import { useMemo, useState } from "react";
-import { useShallow } from "zustand/react/shallow";
-import useOrderBookStore from "@/stores/orderBook/useOrderBookStore";
-import { processOrderBook } from "@/utils/processOrderBook";
-import TickerCurrentPrice from "../TickerCurrentPrice/TickerCurrentPrice";
-import OrdersListRow from "../OrdersListRow/OrdersListRow";
-import OrdersListRowSkeleton from "../OrdersListRowSkeleton/OrdersListRowSkeleton";
-import OrderListHeaders from "../OrdersListHeader/OrderListHeaders";
-import useOrderHighlight from "@/hooks/useOrderHighlight";
-import usePriceChangeAnimation from "@/hooks/usePriceChangeAnimation";
+import { useMemo, useState } from 'react';
+import { useShallow } from 'zustand/react/shallow';
+
+import useOrderHighlight from '@/hooks/useOrderHighlight';
+import usePriceChangeAnimation from '@/hooks/usePriceChangeAnimation';
+import useOrderBookStore from '@/stores/orderBook/useOrderBookStore';
+import { processOrderBook } from '@/utils/processOrderBook';
+
+import OrderListHeaders from '../OrdersListHeader/OrderListHeaders';
+import OrdersListRow from '../OrdersListRow/OrdersListRow';
+import OrdersListRowSkeleton from '../OrdersListRowSkeleton/OrdersListRowSkeleton';
+import TickerCurrentPrice from '../TickerCurrentPrice/TickerCurrentPrice';
 
 const AllOrdersList = () => {
   const [hoveredAskPrice, setHoveredAskPrice] = useState<number | null>(null);
   const [hoveredBidPrice, setHoveredBidPrice] = useState<number | null>(null);
 
-  const { decimal, rounding, bids, asks, changedPrices, animationsEnabled } =
-    useOrderBookStore(
-      useShallow((s) => ({
-        decimal: s.decimal,
-        rounding: s.rounding,
-        bids: s.bids,
-        asks: s.asks,
-        changedPrices: s.changedPrices,
-        animationsEnabled: s.animationsEnabled,
-      })),
-    );
+  const { decimal, rounding, bids, asks, changedPrices, animationsEnabled } = useOrderBookStore(
+    useShallow((s) => ({
+      decimal: s.decimal,
+      rounding: s.rounding,
+      bids: s.bids,
+      asks: s.asks,
+      changedPrices: s.changedPrices,
+      animationsEnabled: s.animationsEnabled,
+    })),
+  );
 
   const {
     processedBids,
@@ -33,8 +34,8 @@ const AllOrdersList = () => {
     maxBidCumulativeTotal,
     maxAskCumulativeTotal,
   } = useMemo(() => {
-    const bidsResult = processOrderBook(bids, decimal, "bid", 17);
-    const asksResult = processOrderBook(asks, decimal, "ask", 17);
+    const bidsResult = processOrderBook(bids, decimal, 'bid', 17);
+    const asksResult = processOrderBook(asks, decimal, 'ask', 17);
 
     return {
       processedBids: bidsResult.orders,
@@ -46,33 +47,22 @@ const AllOrdersList = () => {
     };
   }, [bids, asks, decimal]);
 
-  const highlightedAskPrices = useOrderHighlight(
-    processedAsks,
-    hoveredAskPrice,
-    "ask",
-  );
-  const highlightedBidPrices = useOrderHighlight(
-    processedBids,
-    hoveredBidPrice,
-    "bid",
-  );
-  const isPriceRecentlyChanged = usePriceChangeAnimation(
-    changedPrices,
-    animationsEnabled,
-  );
+  const highlightedAskPrices = useOrderHighlight(processedAsks, hoveredAskPrice, 'ask');
+  const highlightedBidPrices = useOrderHighlight(processedBids, hoveredBidPrice, 'bid');
+  const isPriceRecentlyChanged = usePriceChangeAnimation(changedPrices, animationsEnabled);
 
   const isLoading = bids.length === 0 && asks.length === 0;
 
   if (isLoading) {
     return (
       <>
-        <div className="h-[430px] overflow-y-auto flex flex-col">
+        <div className="flex h-[430px] flex-col overflow-y-auto">
           {Array.from({ length: 17 }).map((_, index) => (
             <OrdersListRowSkeleton key={`ask-skeleton-${index}`} />
           ))}
         </div>
         <TickerCurrentPrice />
-        <div className="h-[430px] flex flex-col">
+        <div className="flex h-[430px] flex-col">
           <OrderListHeaders />
           {Array.from({ length: 17 }).map((_, index) => (
             <OrdersListRowSkeleton key={`bid-skeleton-${index}`} />
@@ -84,7 +74,7 @@ const AllOrdersList = () => {
 
   return (
     <>
-      <div className="h-[430px] overflow-y-auto flex flex-col">
+      <div className="flex h-[430px] flex-col overflow-y-auto">
         {processedAsks.map((ask) => (
           <OrdersListRow
             key={`ask-${ask.price}`}
@@ -104,7 +94,7 @@ const AllOrdersList = () => {
 
       <TickerCurrentPrice />
 
-      <div className="h-[430px] flex flex-col">
+      <div className="flex h-[430px] flex-col">
         <OrderListHeaders />
         {processedBids.map((bid) => (
           <OrdersListRow

@@ -1,4 +1,4 @@
-import type { OrderBookDecimal } from "@/types/orderBookTypes";
+import type { OrderBookDecimal } from '@/types/orderBookTypes';
 
 const formatPrice = (price: number, decimal: OrderBookDecimal): string => {
   let decimalPlaces: number;
@@ -13,7 +13,7 @@ const formatPrice = (price: number, decimal: OrderBookDecimal): string => {
     decimalPlaces = 2;
   }
 
-  return new Intl.NumberFormat("en-US", {
+  return new Intl.NumberFormat('en-US', {
     minimumFractionDigits: decimalPlaces,
     maximumFractionDigits: decimalPlaces,
   }).format(price);

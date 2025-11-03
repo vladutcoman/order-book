@@ -1,6 +1,7 @@
-import { Separator } from "@/components/ui/separator";
-import HeaderTopSection from "./HeaderTopSection/HeaderTopSection";
-import HeaderBottomSection from "./HeaderBottomSection/HeaderBottomSection";
+import { Separator } from '@/components/ui/separator';
+
+import HeaderBottomSection from './HeaderBottomSection/HeaderBottomSection';
+import HeaderTopSection from './HeaderTopSection/HeaderTopSection';
 
 const OrderBookHeader = () => {
   return (
