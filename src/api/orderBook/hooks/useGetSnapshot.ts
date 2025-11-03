@@ -24,8 +24,6 @@ const useGetSnapshot = (
     queryKey: ["orderBookSnapshot", symbol],
     queryFn: () => fetchSnapshot(symbol),
     enabled,
-    staleTime: 1000 * 60 * 5,
-    gcTime: 1000 * 60 * 10,
     retry: 3,
     retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000),
     refetchOnWindowFocus: false,

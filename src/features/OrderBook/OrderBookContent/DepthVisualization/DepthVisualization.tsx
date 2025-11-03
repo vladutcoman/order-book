@@ -1,5 +1,6 @@
 import type { ProcessedOrder } from "@/types/orderBookTypes";
 import useOrderBookStore from "@/stores/orderBook/useOrderBookStore";
+import { cn } from "@/lib/utils";
 
 interface DepthVisualizationProps {
   order: ProcessedOrder;
@@ -38,7 +39,11 @@ const DepthVisualization = ({
 
   return (
     <div
-      className={`absolute top-0 bottom-0 right-0 left-0 ${barColor} transition-all duration-200 pointer-events-none origin-right`}
+      className={cn(
+        "absolute top-0 bottom-0 right-0 left-0",
+        barColor,
+        "transition-all duration-200 pointer-events-none origin-right",
+      )}
       style={{
         transform: `scaleX(${barScale})`,
       }}

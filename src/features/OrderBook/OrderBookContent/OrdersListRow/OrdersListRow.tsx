@@ -77,6 +77,4 @@ const OrdersListRow = memo(
   },
 );
 
-OrdersListRow.displayName = "OrdersListRow";
-
 export default OrdersListRow;

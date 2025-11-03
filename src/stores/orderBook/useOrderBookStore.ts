@@ -186,7 +186,6 @@ const useOrderBookStore = create<OrderBookStore>()(
         showBuySellRatio: state.showBuySellRatio,
         animationsEnabled: state.animationsEnabled,
         rounding: state.rounding,
-        // changedPrices is now an object, so it persists naturally
       }),
     },
   ),

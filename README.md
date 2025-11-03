@@ -99,28 +99,6 @@ I have chosen this combination because it's very easy to customize our component
 - **i18next & react-i18next** - Full i18n support
   - Currently supports English, easily extensible to other languages
 
-### Additional Libraries
-
-- **tailwind-merge** - Merge Tailwind classes intelligently
-- **clsx** - Conditional className utility
-
-## 📋 Assumptions
-
-1. **Binance API Availability**: The application assumes Binance WebSocket and REST APIs are accessible and operational.
-
-2. **Browser Support**:
-   - Modern browsers with WebSocket support (all major browsers since 2011)
-   - ES6+ JavaScript features
-   - CSS Grid and Flexbox support
-
-3. **Network**: Assumes stable internet connection for WebSocket streaming. The app includes error handling for connection issues but doesn't implement automatic reconnection (handled by Binance's infrastructure).
-
-4. **Data Format**: Assumes Binance API response format remains consistent. Any changes to their API structure would require updates.
-
-5. **Decimal Precision**: The order book supports decimal grouping (0.01, 0.1, 1, 10, 50, 100) as per Binance's standard options.
-
-6. **Order Book Limits**: For the "both" tab, displays 17 bids and 17 asks (matching Binance's default). Virtualized lists show all available orders.
-
 ## ✨ Features
 
 ### Core Functionality
@@ -146,10 +124,10 @@ I have chosen this combination because it's very easy to customize our component
 
 ## 🎯 Bonus Challenges Attempted
 
+- Add localStorage persistence
 - Add tabs/filter by sell/buy orders
 - Implemented virtual scrolling for handling thousands of orders efficiently
 - Add internationalization (i18n support)
-- Add localStorage persistence
 
 ## 📁 Project Structure
 
@@ -170,6 +148,11 @@ src/
 ```
 
 ## 🚧 Next Steps / Future Improvements
+
+### Theming
+
+- Extend Tailwind theme so we create a design system a not use hardcoded values
+- Create more reusable components for repeting style patterns
 
 ### Error Handling & Resilience
 
