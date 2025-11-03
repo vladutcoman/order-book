@@ -52,7 +52,7 @@ const AsksOrdersList = () => {
   }
 
   return (
-    <>
+    <div className="flex h-[600px] flex-col gap-2">
       <VirtualizedList items={allAsks} estimateSize={24} maxHeight="600px" className="px-0">
         {(ask) => (
           <OrdersListRow
@@ -70,7 +70,7 @@ const AsksOrdersList = () => {
         )}
       </VirtualizedList>
       <TickerCurrentPrice />
-    </>
+    </div>
   );
 };
 

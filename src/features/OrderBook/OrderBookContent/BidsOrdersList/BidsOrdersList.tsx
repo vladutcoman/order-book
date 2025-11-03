@@ -52,7 +52,7 @@ const BidsOrdersList = () => {
   }
 
   return (
-    <>
+    <div className="flex h-[600px] flex-col gap-2">
       <TickerCurrentPrice />
       <VirtualizedList items={allBids} estimateSize={24} maxHeight="600px" className="px-0">
         {(bid) => (
@@ -70,7 +70,7 @@ const BidsOrdersList = () => {
           />
         )}
       </VirtualizedList>
-    </>
+    </div>
   );
 };
 
