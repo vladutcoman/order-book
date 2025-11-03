@@ -72,7 +72,6 @@ const useOrderBookStore = create<OrderBookStore>()(
 
       setBidsAndAsks: (bids, asks, lastUpdateId) => set({ bids, asks, lastUpdateId }),
 
-      // Apply WebSocket update
       applyUpdate: (update) => {
         const state = get();
 

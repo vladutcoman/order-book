@@ -12,6 +12,7 @@ const fetchTicker = async (symbol: string): Promise<TickerData> => {
   }
 
   const data = await response.json();
+
   return {
     symbol: data.symbol,
     lastPrice: data.lastPrice,
