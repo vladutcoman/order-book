@@ -1,17 +1,18 @@
-import { useTranslation } from "react-i18next";
+import { useTranslation } from 'react-i18next';
+
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import useMarketStore from "@/stores/market/useMarketStore";
+} from '@/components/ui/select';
+import useMarketStore from '@/stores/market/useMarketStore';
 
 const MARKETS = [
-  { label: "BTC/USDT", value: "btcusdt" },
-  { label: "ETH/USDT", value: "ethusdt" },
-  { label: "SOL/USDT", value: "solusdt" },
+  { label: 'BTC/USDT', value: 'btcusdt' },
+  { label: 'ETH/USDT', value: 'ethusdt' },
+  { label: 'SOL/USDT', value: 'solusdt' },
 ];
 
 const MarketSelector = () => {
@@ -20,10 +21,10 @@ const MarketSelector = () => {
   const setMarket = useMarketStore((s) => s.setMarket);
 
   return (
-    <div className="flex flex-col gap-2 items-center">
+    <div className="flex flex-col items-center gap-2">
       <Select value={market} onValueChange={setMarket}>
-        <SelectTrigger aria-label={t("marketSelector.selectMarket")}>
-          <SelectValue placeholder={t("marketSelector.selectMarket")} />
+        <SelectTrigger aria-label={t('marketSelector.selectMarket')}>
+          <SelectValue placeholder={t('marketSelector.selectMarket')} />
         </SelectTrigger>
         <SelectContent>
           {MARKETS.map((m) => (
@@ -33,8 +34,8 @@ const MarketSelector = () => {
           ))}
         </SelectContent>
       </Select>
-      <p className="text-sm text-muted-foreground">
-        {t("marketSelector.market")}: {market}
+      <p className="text-muted-foreground text-sm">
+        {t('marketSelector.market')}: {market}
       </p>
     </div>
   );

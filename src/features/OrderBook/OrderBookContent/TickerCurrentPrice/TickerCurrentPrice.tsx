@@ -1,15 +1,14 @@
-import { useRef, useEffect, useState } from "react";
-import { ArrowUp, ArrowDown, Loader2 } from "lucide-react";
-import useMarketStore from "@/stores/market/useMarketStore";
-import useGetTicker from "@/api/orderBook/hooks/useGetTicker";
-import { formatNumber } from "@/utils/formatNumber";
-import useCurrentPrice from "@/hooks/useCurrentPrice";
+import { useEffect, useRef, useState } from 'react';
+
+import { ArrowDown, ArrowUp, Loader2 } from 'lucide-react';
+import useCurrentPrice from '@/hooks/useCurrentPrice';
+import useMarketStore from '@/stores/market/useMarketStore';
+import { formatNumber } from '@/utils/formatNumber';
+import useGetTicker from '@/api/orderBook/hooks/useGetTicker';
 
 const TickerCurrentPrice = () => {
   const previousPriceRef = useRef<number | null>(null);
-  const [priceDirection, setPriceDirection] = useState<"up" | "down" | null>(
-    null,
-  );
+  const [priceDirection, setPriceDirection] = useState<'up' | 'down' | null>(null);
 
   const market = useMarketStore((state) => state.market);
   const currentPrice = useCurrentPrice();
@@ -19,9 +18,9 @@ const TickerCurrentPrice = () => {
     if (currentPrice !== null) {
       if (previousPriceRef.current !== null) {
         if (currentPrice > previousPriceRef.current) {
-          setPriceDirection("up");
+          setPriceDirection('up');
         } else if (currentPrice < previousPriceRef.current) {
-          setPriceDirection("down");
+          setPriceDirection('down');
         }
       }
       previousPriceRef.current = currentPrice;
@@ -39,33 +38,29 @@ const TickerCurrentPrice = () => {
     : null;
 
   const priceColor =
-    priceDirection === "up"
-      ? "text-green-500"
-      : priceDirection === "down"
-        ? "text-destructive"
+    priceDirection === 'up'
+      ? 'text-green-500'
+      : priceDirection === 'down'
+        ? 'text-destructive'
         : priceChangePercent !== null
           ? priceChangePercent >= 0
-            ? "text-green-500"
-            : "text-destructive"
-          : "text-foreground";
+            ? 'text-green-500'
+            : 'text-destructive'
+          : 'text-foreground';
 
   return (
-    <div className="h-[36px] px-4 py-2 flex items-center justify-between">
+    <div className="flex h-[36px] items-center justify-between px-4 py-2">
       {currentPrice !== null ? (
         <div className="flex items-center justify-center gap-2">
           <div className={`text-[20px] font-medium ${priceColor}`}>
             {formatNumber(currentPrice)}
           </div>
-          {priceDirection === "up" && (
-            <ArrowUp className="size-4 text-green-500" />
-          )}
-          {priceDirection === "down" && (
-            <ArrowDown className="size-4 text-destructive" />
-          )}
+          {priceDirection === 'up' && <ArrowUp className="size-4 text-green-500" />}
+          {priceDirection === 'down' && <ArrowDown className="text-destructive size-4" />}
         </div>
       ) : (
         <div className="flex items-center justify-center gap-2">
-          <Loader2 className="size-4 animate-spin text-muted-foreground" />
+          <Loader2 className="text-muted-foreground size-4 animate-spin" />
         </div>
       )}
     </div>

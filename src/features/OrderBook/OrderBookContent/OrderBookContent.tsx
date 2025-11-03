@@ -1,22 +1,23 @@
-import { useEffect } from "react";
-import { useShallow } from "zustand/react/shallow";
-import useOrderBookStore from "@/stores/orderBook/useOrderBookStore";
-import AllOrdersList from "./AllOrdersList/AllOrdersList";
-import BidsOrdersList from "./BidsOrdersList/BidsOrdersList";
-import AsksOrdersList from "./AsksOrdersList/AsksOrdersList";
-import OrderListHeaders from "./OrdersListHeader/OrderListHeaders";
+import { useEffect } from 'react';
+import { useShallow } from 'zustand/react/shallow';
+
+import useOrderBookStore from '@/stores/orderBook/useOrderBookStore';
+
+import AllOrdersList from './AllOrdersList/AllOrdersList';
+import AsksOrdersList from './AsksOrdersList/AsksOrdersList';
+import BidsOrdersList from './BidsOrdersList/BidsOrdersList';
+import OrderListHeaders from './OrdersListHeader/OrderListHeaders';
 
 const ANIMATION_DURATION = 800;
 
 const OrderBookContent = () => {
-  const { tab, cleanupExpiredChangedPrices, animationsEnabled } =
-    useOrderBookStore(
-      useShallow((state) => ({
-        tab: state.tab,
-        cleanupExpiredChangedPrices: state.cleanupExpiredChangedPrices,
-        animationsEnabled: state.animationsEnabled,
-      })),
-    );
+  const { tab, cleanupExpiredChangedPrices, animationsEnabled } = useOrderBookStore(
+    useShallow((state) => ({
+      tab: state.tab,
+      cleanupExpiredChangedPrices: state.cleanupExpiredChangedPrices,
+      animationsEnabled: state.animationsEnabled,
+    })),
+  );
 
   // Cleanup expired animation entries periodically
   useEffect(() => {
@@ -32,9 +33,9 @@ const OrderBookContent = () => {
   return (
     <div className="flex flex-col gap-2 pb-6">
       <OrderListHeaders />
-      {tab === "both" ? (
+      {tab === 'both' ? (
         <AllOrdersList />
-      ) : tab === "bids" ? (
+      ) : tab === 'bids' ? (
         <BidsOrdersList />
       ) : (
         <AsksOrdersList />

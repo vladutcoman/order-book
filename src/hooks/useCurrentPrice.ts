@@ -1,16 +1,13 @@
-import { useMemo } from "react";
-import useOrderBookStore from "@/stores/orderBook/useOrderBookStore";
-import useMarketStore from "@/stores/market/useMarketStore";
-import useGetTicker from "@/api/orderBook/hooks/useGetTicker";
+import { useMemo } from 'react';
+
+import useMarketStore from '@/stores/market/useMarketStore';
+import useOrderBookStore from '@/stores/orderBook/useOrderBookStore';
+import useGetTicker from '@/api/orderBook/hooks/useGetTicker';
 
 const useCurrentPrice = (): number | null => {
   const market = useMarketStore((state) => state.market);
-  const firstBid = useOrderBookStore((state) =>
-    state.bids.length > 0 ? state.bids[0] : null,
-  );
-  const firstAsk = useOrderBookStore((state) =>
-    state.asks.length > 0 ? state.asks[0] : null,
-  );
+  const firstBid = useOrderBookStore((state) => (state.bids.length > 0 ? state.bids[0] : null));
+  const firstAsk = useOrderBookStore((state) => (state.asks.length > 0 ? state.asks[0] : null));
 
   const { data: ticker } = useGetTicker(market);
 

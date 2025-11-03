@@ -1,7 +1,4 @@
-export const groupByDecimal = (
-  orders: [string, string][],
-  step: number,
-): Map<number, number> => {
+export const groupByDecimal = (orders: [string, string][], step: number): Map<number, number> => {
   const grouped = new Map<number, number>();
 
   for (const [priceStr, quantityStr] of orders) {

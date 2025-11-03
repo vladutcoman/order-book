@@ -1,6 +1,6 @@
-import { cn } from "@/lib/utils";
-import type { OrderBookTab } from "@/types/orderBookTypes";
-import useOrderBookStore from "@/stores/orderBook/useOrderBookStore";
+import type { OrderBookTab } from '@/types/orderBookTypes';
+import { cn } from '@/lib/utils';
+import useOrderBookStore from '@/stores/orderBook/useOrderBookStore';
 
 const TabIcon = ({ tabValue }: { tabValue: OrderBookTab }) => {
   const tab = useOrderBookStore((s) => s.tab);
@@ -11,14 +11,12 @@ const TabIcon = ({ tabValue }: { tabValue: OrderBookTab }) => {
     <button
       onClick={() => setTab(tabValue)}
       className={cn(
-        "rounded transition-colors p-1!",
-        isActive
-          ? "bg-accent text-accent-foreground"
-          : "hover:bg-accent/50 text-muted-foreground",
+        'rounded p-1! transition-colors',
+        isActive ? 'bg-accent text-accent-foreground' : 'hover:bg-accent/50 text-muted-foreground',
       )}
       aria-label={`Show ${tabValue}`}
     >
-      {tabValue === "both" && (
+      {tabValue === 'both' && (
         <svg
           width="16"
           height="16"
@@ -33,7 +31,7 @@ const TabIcon = ({ tabValue }: { tabValue: OrderBookTab }) => {
           <rect x="8" y="8" width="6" height="6" fill="#9ca3af" opacity="0.5" />
         </svg>
       )}
-      {tabValue === "bids" && (
+      {tabValue === 'bids' && (
         <svg
           width="16"
           height="16"
@@ -47,7 +45,7 @@ const TabIcon = ({ tabValue }: { tabValue: OrderBookTab }) => {
           <rect x="8" y="8" width="6" height="6" fill="#9ca3af" opacity="0.5" />
         </svg>
       )}
-      {tabValue === "asks" && (
+      {tabValue === 'asks' && (
         <svg
           width="16"
           height="16"

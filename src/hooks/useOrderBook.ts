@@ -1,9 +1,11 @@
-import { useEffect } from "react";
-import useGetSnapshot from "../api/orderBook/hooks/useGetSnapshot";
-import useStreamOrders from "../api/orderBook/hooks/useStreamOrders";
-import useOrderBookStore from "@/stores/orderBook/useOrderBookStore";
+import { useEffect } from 'react';
 
-const useOrderBook = (symbol: string = "btcusdt") => {
+import useOrderBookStore from '@/stores/orderBook/useOrderBookStore';
+
+import useGetSnapshot from '../api/orderBook/hooks/useGetSnapshot';
+import useStreamOrders from '../api/orderBook/hooks/useStreamOrders';
+
+const useOrderBook = (symbol: string = 'btcusdt') => {
   const {
     data: snapshot,
     isLoading: snapshotLoading,
@@ -14,12 +16,7 @@ const useOrderBook = (symbol: string = "btcusdt") => {
   const setBidsAndAsks = useOrderBookStore((s) => s.setBidsAndAsks);
   const reset = useOrderBookStore((s) => s.reset);
 
-  const {
-    connect,
-    disconnect,
-    isConnected,
-    error: streamError,
-  } = useStreamOrders();
+  const { connect, disconnect, isConnected, error: streamError } = useStreamOrders();
 
   useEffect(() => {
     if (snapshot) {

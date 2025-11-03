@@ -1,5 +1,6 @@
-import { useMemo, useRef, useEffect } from "react";
-import type { ChangedPrices } from "@/types/orderBookTypes";
+import { useEffect, useMemo, useRef } from 'react';
+
+import type { ChangedPrices } from '@/types/orderBookTypes';
 
 const ANIMATION_DURATION = 800;
 
@@ -9,10 +10,7 @@ const ANIMATION_DURATION = 800;
  * @param animationsEnabled - Whether animations are enabled
  * @returns Function that checks if a price was recently changed
  */
-const usePriceChangeAnimation = (
-  changedPrices: ChangedPrices,
-  animationsEnabled: boolean,
-) => {
+const usePriceChangeAnimation = (changedPrices: ChangedPrices, animationsEnabled: boolean) => {
   // Use ref to track current time for animation checks (updates only when changedPrices changes)
   const timeRef = useRef(Date.now());
   useEffect(() => {

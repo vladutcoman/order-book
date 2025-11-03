@@ -1,15 +1,17 @@
-import { memo } from "react";
-import type { ProcessedOrder } from "@/types/orderBookTypes";
-import { formatNumber } from "@/utils/formatNumber";
-import { roundNumber } from "@/utils/roundNumber";
-import DepthVisualization from "../DepthVisualization/DepthVisualization";
-import { cn } from "@/lib/utils";
-import formatPrice from "@/utils/formatPrice";
-import useOrderBookStore from "@/stores/orderBook/useOrderBookStore";
+import { memo } from 'react';
+
+import type { ProcessedOrder } from '@/types/orderBookTypes';
+import { cn } from '@/lib/utils';
+import useOrderBookStore from '@/stores/orderBook/useOrderBookStore';
+import { formatNumber } from '@/utils/formatNumber';
+import formatPrice from '@/utils/formatPrice';
+import { roundNumber } from '@/utils/roundNumber';
+
+import DepthVisualization from '../DepthVisualization/DepthVisualization';
 
 interface OrdersListRowProps {
   order: ProcessedOrder;
-  type: "bid" | "ask";
+  type: 'bid' | 'ask';
   rounding: boolean;
   maxTotal?: number;
   cumulativeTotal?: number;
@@ -34,20 +36,20 @@ const OrdersListRow = memo(
     onMouseLeave,
   }: OrdersListRowProps) => {
     const decimal = useOrderBookStore((state) => state.decimal);
-    const priceColor = type === "bid" ? "text-green-500" : "text-destructive";
+    const priceColor = type === 'bid' ? 'text-green-500' : 'text-destructive';
 
     const animationClass = isChanged
-      ? type === "bid"
-        ? "animate-flash-green"
-        : "animate-flash-red"
-      : "";
+      ? type === 'bid'
+        ? 'animate-flash-green'
+        : 'animate-flash-red'
+      : '';
 
     return (
       <div
         className={cn(
-          "grid grid-cols-3 gap-2 text-sm mx-4 relative transition-colors cursor-pointer",
+          'relative mx-4 grid cursor-pointer grid-cols-3 gap-2 text-sm transition-colors',
           animationClass,
-          isHighlighted && "bg-gray-500/10",
+          isHighlighted && 'bg-gray-500/10',
         )}
         onMouseEnter={onMouseEnter}
         onMouseLeave={onMouseLeave}
@@ -60,14 +62,14 @@ const OrdersListRow = memo(
           maxCumulativeTotal={maxCumulativeTotal}
         />
         <div
-          className={`text-left text-[12px] fonr-[400] line-height-[18px] ${priceColor} relative z-10`}
+          className={`fonr-[400] line-height-[18px] text-left text-[12px] ${priceColor} relative z-10`}
         >
           {formatPrice(order.price, decimal)}
         </div>
-        <div className="text-right text-[12px] fonr-[400] line-height-[18px] relative z-10 py-1">
+        <div className="fonr-[400] line-height-[18px] relative z-10 py-1 text-right text-[12px]">
           <span className="relative z-10">{formatNumber(order.quantity)}</span>
         </div>
-        <div className="text-right text-[12px] fonr-[400] line-height-[18px] relative z-10 py-1">
+        <div className="fonr-[400] line-height-[18px] relative z-10 py-1 text-right text-[12px]">
           <span className="relative z-10">
             {rounding ? roundNumber(order.total) : formatNumber(order.total)}
           </span>

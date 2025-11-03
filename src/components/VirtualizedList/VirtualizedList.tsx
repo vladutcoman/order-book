@@ -1,6 +1,6 @@
-import type { ReactNode } from "react";
-import { useRef } from "react";
-import { useVirtualizer } from "@tanstack/react-virtual";
+import type { ReactNode } from 'react';
+import { useRef } from 'react';
+import { useVirtualizer } from '@tanstack/react-virtual';
 
 interface VirtualizedListProps<T> {
   items: T[];
@@ -16,8 +16,8 @@ const VirtualizedList = <T,>({
   children,
   estimateSize = 50,
   overscan = 5,
-  className = "",
-  maxHeight = "min(400px,70vh)",
+  className = '',
+  maxHeight = 'min(400px,70vh)',
 }: VirtualizedListProps<T>) => {
   const parentRef = useRef<HTMLUListElement>(null);
 
@@ -35,8 +35,8 @@ const VirtualizedList = <T,>({
       style={{
         height: `${rowVirtualizer.getTotalSize()}px`,
         maxHeight,
-        width: "100%",
-        position: "relative",
+        width: '100%',
+        position: 'relative',
         padding: 0,
       }}
     >
@@ -49,7 +49,7 @@ const VirtualizedList = <T,>({
             key={virtualRow.index}
             data-index={virtualRow.index}
             ref={rowVirtualizer.measureElement}
-            className="absolute left-0 top-0 w-full"
+            className="absolute top-0 left-0 w-full"
             style={{
               transform: `translateY(${virtualRow.start}px)`,
             }}

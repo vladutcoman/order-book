@@ -1,5 +1,6 @@
-import { useQuery } from "@tanstack/react-query";
-import type { TickerData } from "../types";
+import { useQuery } from '@tanstack/react-query';
+
+import type { TickerData } from '../types';
 
 const fetchTicker = async (symbol: string): Promise<TickerData> => {
   const response = await fetch(
@@ -21,9 +22,9 @@ const fetchTicker = async (symbol: string): Promise<TickerData> => {
   };
 };
 
-const useGetTicker = (symbol: string = "btcusdt") => {
+const useGetTicker = (symbol: string = 'btcusdt') => {
   return useQuery({
-    queryKey: ["ticker", symbol],
+    queryKey: ['ticker', symbol],
     queryFn: () => fetchTicker(symbol),
     enabled: !!symbol,
     refetchInterval: 1000,

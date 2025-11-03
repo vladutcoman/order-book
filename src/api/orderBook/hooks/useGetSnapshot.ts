@@ -1,5 +1,6 @@
-import { useQuery } from "@tanstack/react-query";
-import type { SnapshotData, SnapshotError } from "../types";
+import { useQuery } from '@tanstack/react-query';
+
+import type { SnapshotData, SnapshotError } from '../types';
 
 const fetchSnapshot = async (symbol: string): Promise<SnapshotData> => {
   const response = await fetch(
@@ -8,20 +9,15 @@ const fetchSnapshot = async (symbol: string): Promise<SnapshotData> => {
 
   if (!response.ok) {
     const errorData: SnapshotError = await response.json();
-    throw new Error(
-      `Failed to fetch snapshot: ${errorData.msg || response.statusText}`,
-    );
+    throw new Error(`Failed to fetch snapshot: ${errorData.msg || response.statusText}`);
   }
 
   return response.json();
 };
 
-const useGetSnapshot = (
-  symbol: string = "btcusdt",
-  enabled: boolean = true,
-) => {
+const useGetSnapshot = (symbol: string = 'btcusdt', enabled: boolean = true) => {
   return useQuery({
-    queryKey: ["orderBookSnapshot", symbol],
+    queryKey: ['orderBookSnapshot', symbol],
     queryFn: () => fetchSnapshot(symbol),
     enabled,
     retry: 3,

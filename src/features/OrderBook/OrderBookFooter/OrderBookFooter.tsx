@@ -1,7 +1,8 @@
-import { useMemo } from "react";
-import { useTranslation } from "react-i18next";
-import useOrderBookStore from "@/stores/orderBook/useOrderBookStore";
-import { groupByDecimal } from "@/utils/groupByDecimal";
+import { useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
+
+import useOrderBookStore from '@/stores/orderBook/useOrderBookStore';
+import { groupByDecimal } from '@/utils/groupByDecimal';
 
 const OrderBookFooter = () => {
   const { t } = useTranslation();
@@ -26,14 +27,8 @@ const OrderBookFooter = () => {
       .sort((a, b) => a[0] - b[0])
       .slice(0, 17);
 
-    const totalBuyVolume = bidsArray.reduce(
-      (sum, [, quantity]) => sum + quantity,
-      0,
-    );
-    const totalSellVolume = asksArray.reduce(
-      (sum, [, quantity]) => sum + quantity,
-      0,
-    );
+    const totalBuyVolume = bidsArray.reduce((sum, [, quantity]) => sum + quantity, 0);
+    const totalSellVolume = asksArray.reduce((sum, [, quantity]) => sum + quantity, 0);
 
     const totalVolume = totalBuyVolume + totalSellVolume;
 
@@ -55,12 +50,12 @@ const OrderBookFooter = () => {
   }
 
   return (
-    <div className="flex items-center justify-between px-2 py-2 text-sm border-t">
+    <div className="flex items-center justify-between border-t px-2 py-2 text-sm">
       <span className="text-green-500">
-        {t("orderBookFooter.buy")} {ratio.buy.toFixed(2)}%
+        {t('orderBookFooter.buy')} {ratio.buy.toFixed(2)}%
       </span>
       <span className="text-destructive">
-        {ratio.sell.toFixed(2)}% {t("orderBookFooter.sell")}
+        {ratio.sell.toFixed(2)}% {t('orderBookFooter.sell')}
       </span>
     </div>
   );

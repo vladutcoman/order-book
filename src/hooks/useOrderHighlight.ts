@@ -1,5 +1,6 @@
-import { useMemo } from "react";
-import type { ProcessedOrder } from "@/types/orderBookTypes";
+import { useMemo } from 'react';
+
+import type { ProcessedOrder } from '@/types/orderBookTypes';
 
 /**
  * Custom hook to calculate which order prices should be highlighted
@@ -11,7 +12,7 @@ import type { ProcessedOrder } from "@/types/orderBookTypes";
 const useOrderHighlight = (
   orders: ProcessedOrder[],
   hoveredPrice: number | null,
-  type: "ask" | "bid",
+  type: 'ask' | 'bid',
 ): Set<number> => {
   return useMemo(() => {
     if (!hoveredPrice) {
@@ -21,7 +22,7 @@ const useOrderHighlight = (
     const highlighted = new Set<number>();
 
     orders.forEach((order) => {
-      if (type === "ask") {
+      if (type === 'ask') {
         // For asks: highlight all rows BELOW (lower prices, closer to center)
         // Highlight all asks with price <= hovered price (rows below)
         if (order.price <= hoveredPrice) {

@@ -1,8 +1,9 @@
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { ThemeProvider } from "@/components/ThemeProvider/ThemeProvider";
-import { Toaster } from "@/components/ui/sonner";
-import i18n from "@/i18n/i18n";
-import { I18nextProvider } from "react-i18next";
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { I18nextProvider } from 'react-i18next';
+
+import { Toaster } from '@/components/ui/sonner';
+import { ThemeProvider } from '@/components/ThemeProvider/ThemeProvider';
+import i18n from '@/i18n/i18n';
 
 const queryClient = new QueryClient({
   defaultOptions: {
