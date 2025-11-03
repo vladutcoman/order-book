@@ -24,10 +24,8 @@ export const processOrderBook = (
     };
   }
 
-  // Group orders by decimal step
   const grouped = groupByDecimal(rawOrders, decimal);
 
-  // Create ProcessedOrder array
   const ordersArray = Array.from(grouped.entries())
     .map(([price, quantity]) => ({
       price,
@@ -36,22 +34,17 @@ export const processOrderBook = (
     }))
     .sort((a, b) => (type === 'bid' ? b.price - a.price : a.price - b.price));
 
-  // Apply limit if specified
   const limitedOrders = limit ? ordersArray.slice(0, limit) : ordersArray;
 
   // Calculate cumulative totals
-  // For bids: accumulate from best bid (highest price) downward
-  // For asks: accumulate from best ask (lowest price) upward, then reverse for display
   let cumulative = 0;
   const ordersWithCumulative = limitedOrders.map((order) => {
     cumulative += order.total;
     return { ...order, cumulativeTotal: cumulative };
   });
 
-  // For asks, reverse after calculating cumulative (for display: highest to lowest)
   const finalOrders = type === 'ask' ? ordersWithCumulative.reverse() : ordersWithCumulative;
 
-  // Calculate max values (using reduce instead of spread to avoid potential stack overflow)
   const maxTotal =
     limitedOrders.length > 0
       ? limitedOrders.reduce((max, order) => Math.max(max, order.total), 0)

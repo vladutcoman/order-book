@@ -21,11 +21,9 @@ const useGetSnapshot = (symbol: string = 'btcusdt', enabled: boolean = true) => 
     queryFn: () => fetchSnapshot(symbol),
     enabled,
     retry: 3,
-    retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000),
     refetchOnWindowFocus: false,
     refetchOnReconnect: true,
   });
 };
 
 export default useGetSnapshot;
-export type { SnapshotData, SnapshotError };
