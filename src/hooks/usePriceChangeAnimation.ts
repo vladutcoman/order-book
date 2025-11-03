@@ -19,10 +19,17 @@ const usePriceChangeAnimation = (
   }, [changedPrices]);
 
   return useMemo(() => {
-    if (!animationsEnabled) return () => false;
+    if (!animationsEnabled) {
+      return () => false;
+    }
+
     return (price: string) => {
       const timestamp = changedPrices.get(price);
-      if (!timestamp) return false;
+
+      if (!timestamp) {
+        return false;
+      }
+
       return timeRef.current - timestamp < ANIMATION_DURATION;
     };
   }, [changedPrices, animationsEnabled]);

@@ -14,7 +14,9 @@ const useOrderHighlight = (
   type: "ask" | "bid",
 ): Set<number> => {
   return useMemo(() => {
-    if (!hoveredPrice) return new Set<number>();
+    if (!hoveredPrice) {
+      return new Set<number>();
+    }
 
     const highlighted = new Set<number>();
 
